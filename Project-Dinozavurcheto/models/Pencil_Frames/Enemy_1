@@ -1,0 +1,21 @@
+<!DOCTYPE PencilDocument>
+<document>
+  <editor>
+    <currentLayer value="0" />
+    <currentFrame value="1" />
+    <currentView dx="62.19981573708137" dy="-51.12791128670897" m21="0" m11="2.316366976781091" m22="2.316366976781091" m12="0" />
+  </editor>
+  <object>
+    <layer visibility="1" type="2" id="2" name="Char_Enemy" >
+      <image frame="1" src="002.001.vec" />
+      <image frame="2" src="002.002.vec" />
+      <image frame="3" src="002.003.vec" />
+      <image frame="4" src="002.004.vec" />
+      <image frame="5" src="002.005.vec" />
+      <image frame="6" src="002.006.vec" />
+    </layer>
+    <layer visibility="0" type="1" id="1" name="Background" >
+      <image topLeftX="0" topLeftY="0" frame="1" src="001.001.png" />
+    </layer>
+  </object>
+</document>

@@ -1,0 +1,19 @@
+<!DOCTYPE PencilDocument>
+<document>
+  <editor>
+    <currentLayer value="0" />
+    <currentFrame value="4" />
+    <currentView dx="43.73081584707953" dy="-139.9618413879759" m21="0" m11="-0.9048374180359592" m22="0.9048374180359592" m12="0" />
+  </editor>
+  <object>
+    <layer visibility="1" type="2" id="2" name="Character" >
+      <image frame="1" src="002.001.vec" />
+      <image frame="2" src="002.002.vec" />
+      <image frame="3" src="002.003.vec" />
+      <image frame="4" src="002.004.vec" />
+    </layer>
+    <layer visibility="0" type="1" id="1" name="Background" >
+      <image topLeftX="0" topLeftY="0" frame="1" src="001.001.png" />
+    </layer>
+  </object>
+</document>
