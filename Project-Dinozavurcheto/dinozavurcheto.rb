@@ -67,7 +67,7 @@ class Game
 			@speed = 30
 		end
 
-		def move
+		def move bg_pos
 			case @image
 				when @image7
 					@image = @image3
@@ -86,8 +86,10 @@ class Game
 			end
 			
 			@rect.center = [@curr_x = @curr_x - @speed / 1.5, @curr_y = @curr_y + @speed]
+			@rect.center = [@curr_x = @curr_x + bg_pos, @curr_y = @curr_y + @speed]
+			puts bg_pos
 			if @curr_x < 0 && @curr_y > 1000
-				@curr_x = rand 800
+				@curr_x = rand(400) + rand(400) + rand(42)
 				@curr_y = 0
 			end
 		end
@@ -106,7 +108,7 @@ class Game
 			
 			@breaker = 1
 			@curr_x = 74
-			@curr_y = 300
+			@curr_y = 350
 			@rect = @image.make_rect
 			@rect.center = [@curr_x, @curr_y]
 			@speed = 30
@@ -129,15 +131,13 @@ class Game
 				when @image1, @image3
 					@image = image2
 			end
-			
-			@rect.center = [@curr_x, @curr_y]
 		end
 		
 		def jump
 		
 		end
 		
-		def move dir
+		def move dir, bg_pos
 			case dir
 				when 'w'
 					#@rect.center = [@curr_x, @curr_y = @curr_y - @jump_height]
@@ -146,19 +146,22 @@ class Game
 				when 'a'
 					if @curr_x < 440
 						@rect.center = [@curr_x = @curr_x - @speed, @curr_y]
-						change_frame dir
 					else
-						
+						bg_pos = bg_pos + @speed
+						@curr_x = @curr_x - bg_pos
 					end
 				when 'd'
 					if @curr_x < 440
 						@rect.center = [@curr_x = @curr_x + @speed, @curr_y]
-						change_frame dir
 					else
-						
+						bg_pos = bg_pos - @speed
+						@curr_x = @curr_x + (bg_pos * -1)
 					end
 			end
-				
+			
+			change_frame dir
+			
+			bg_pos
 		end
 	end
 
@@ -178,6 +181,7 @@ class Game
 		@eye = Enemy.new 'eye'
 		@direction = 42
 		@mul_click = 0
+		@bg_x = 0
 		
 		@text = Text.new
 
@@ -205,6 +209,32 @@ class Game
 		@app = create_gui(@render_adapter, @rts, @screen)
 		@app_adapter = @factory.app_for :rubygame, @app
 	end
+	
+	def achieve
+		achv_check = false
+		@dir_right = 4
+		@dir_left = 4
+		@dir_up = 4
+		achv_1 = Surface.load "models/Achievement/The_Bolt.png"
+		achv_2 = Surface.load "models/Achievement/The_Angry_Old_Guy.png"
+		achv_3 = Surface.load "models/Achievement/Black_Spiderman.png"
+		if achv_check == false
+			if @dir_right == 5 && @dir_left != 5 && @dir_up != 5
+				achv_1.blit @screen,[650,20]
+				achv_check = true
+			elsif @dir_right != 5 && @dir_left == 5 && @dir_up != 5
+				achv_2.blit @screen,[650,20]
+				achv_check = true
+			elsif @dir_right != 5 && @dir_left != 5 && @dir_up == 5
+				achv_3.blit @screen,[650,20]
+				achv_check = true
+			else
+				@dir_right = 0
+				@dir_left = 0
+				@dir_up = 0
+			end
+		end
+	end
 
 	def run
 		loop do
@@ -226,7 +256,7 @@ class Game
 						when K_ESCAPE
 							@change_view = 0
 						when K_W
-							@dino.move 'w'
+							@bg_x = @dino.move 'w', @bg_x
 						when K_A, K_D
 							if @direction != 42
 								@mul_click = 1
@@ -270,13 +300,13 @@ class Game
 			end
 			
 			if @dino.breaker == 0
-				@dino.move @direction
+				@bg_x = @dino.move @direction, @bg_x
 			end
 			
-			@pac.move
-			@eye.move
+			@pac.move @bg_x
+			@eye.move @bg_x
 			
-			@background.blit @screen, [0, 0]
+			@background.blit @screen, [@bg_x, 0]
 			@dino.draw @screen
 			@pac.draw @screen
 			@eye.draw @screen
@@ -288,6 +318,8 @@ class Game
 			puts ' ------------------------- '
 			
 			@text.text rand(100).to_s
+			
+			achieve
 		else
 			@app_adapter.draw @render_adapter
 				
