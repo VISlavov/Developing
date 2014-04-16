@@ -1,8 +1,6 @@
 module CreateGui
-  def create_gui renderer, music, screen
+  def create_gui renderer, music
     app = App.new :renderer => renderer
-	
-	@change_view = 0
 
 	@button = Button.new "Start/Continue game", :x=>70, :y=>80, :w=>200, :h=>100, :padding_left=>20, :padding_top=>20
 	
@@ -10,7 +8,7 @@ module CreateGui
 		@change_view = 1
 	end
 
-    grp1 = RadioGroup.new :x=>200, :y=>190, :padding_left=>20, :padding_top=>20, :w=> 170, :h=>100
+    grp1 = RadioGroup.new :x=>450, :y=>150, :padding_left=>20, :padding_top=>20, :w=> 170, :h=>100
 
     grp_label1 = Label.new "Yes:", :x=>17, :y=>40, :w=>10, :h=>10, :relative=>true
     grp_label2 = Label.new "No:", :x=>85, :y=>40, :w=>10, :h=>10, :relative=>true
@@ -50,17 +48,22 @@ module CreateGui
 	end
 	
 	grp1.add grp_label1, grp_label2, grp_label3, grp_radio_one, grp_radio_two
-		
-	grp1.hide
 
-    hide_button = Button.new "Settings", :x=>70, :y=>240, :padding_left=>20, :padding_top=>20
-    hide_button.on :pressed do |*opts|
-      if grp1.visible?
-        grp1.hide
-      else
-        grp1.show
-      end
-    end
+    modal_button_settings = Button.new "Settings", :x=>70, :y=>240, :padding_left=>20, :padding_top=>20
+	modal_button_settings.on :pressed do |*opts|
+	
+		modal = Dialog.new :modal => app, :x=>400, :y=>110, :w=>350, :h=>250
+		modal.add grp1
+		
+		ok_butt = Button.new("OK", :x=>180, :y=>180, :padding_left=>20, :padding_top=>20,:relative=>true)
+		ok_butt.on :pressed do |*opts|
+			modal.close
+		end
+		
+		modal.add ok_butt
+		
+		modal.display
+	end
     
     modal_button = Button.new "Help", :x=>70, :y=>160, :padding_left=>20, :padding_top=>20
 	modal_button.on :pressed do |*opts|
@@ -86,21 +89,26 @@ module CreateGui
 		
 	modal_button2 = Button.new "Story of the trippy dino", :x=>70, :y=>320, :padding_left=>20, :padding_top=>20
 	modal_button2.on :pressed do |*opts|
-		modal2 = Dialog.new :modal => app, :x=>400, :y=>110, :w=>350, :h=>250
-			
-		ok_butt2 = Button.new("OK", :x=>180, :y=>180, :padding_left=>20, :padding_top=>20,:relative=>true)
+		modal = Dialog.new :modal => app, :x=>400, :y=>110, :w=>600, :h=>300
 		
-		ok_butt2.on :pressed do |*opts|
-			modal2.close
+		modal.add Label.new("The story: ", :x=>20, :y=>10, :padding_left=>10, :padding_top=>10, :relative=>true)
+		modal.add TextField.new("One upon a time, there was this little dino.", :x=>20, :y=>70, :padding_left=>10, :padding_top=>10, :relative=>true)
+		modal.add TextField.new("His name was Fred. He was very curious so he took LSD.", :x=>20, :y=>100, :padding_left=>10, :padding_top=>10, :relative=>true)
+		modal.add TextField.new("Join him in his journey for survival.", :x=>20, :y=>130, :padding_left=>10, :padding_top=>10, :relative=>true)
+		modal.add TextField.new("This is .. the Trippy Dino.", :x=>20, :y=>160, :padding_left=>10, :padding_top=>10, :relative=>true)
+			
+		ok_butt = Button.new("OK", :x=>400, :y=>230, :padding_left=>20, :padding_top=>20,:relative=>true)
+		
+		ok_butt.on :pressed do |*opts|
+			modal.close
 		end
 		
-		modal2.add ok_butt2
-		
-		modal2.display
+		modal.add ok_butt
+		modal.display
 	end
     
-    app.add @button, modal_button, grp1, hide_button, modal_button2
-
+    app.add @button, modal_button, modal_button_settings, modal_button2
+    
     app
   end
 end
