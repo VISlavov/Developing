@@ -98,7 +98,6 @@ class Game
 			@jump_trigger = 0
 			@jump_ascending = 1
 			@last_dir = ''
-			@last_reasonable_dir = ''
 		end
 		
 		def reset bg, mandatory = 0
@@ -117,6 +116,8 @@ class Game
 						@image = @image6
 					when 'a'
 						@image = @image5
+					when 42, 1337
+						return 0
 				end
 			else
 				case mode
@@ -126,6 +127,8 @@ class Game
 					when 'a'
 						image1 = @image3
 						image2 = @image4
+					when 42, 1337
+						return 0
 				end
 				
 				case @image
@@ -170,7 +173,6 @@ class Game
 						elsif @breaker == 0
 							dir = @last_dir
 						else
-							@last_reasonable_dir = @last_dir
 							@last_dir = 42
 							cycle = 0
 						end
@@ -192,10 +194,6 @@ class Game
 					@jump_trigger = 0
 					@jump_ascending = 1
 				end
-			end
-			
-			if dir != 'a' && dir != 'd'
-				dir = @last_reasonable_dir
 			end
 			
 			change_frame dir, @jump_trigger
@@ -222,6 +220,7 @@ class Game
 		@eye = Enemy.new 'eye'
 		@direction = 42
 		@mul_click = 0
+		@jump_lander = 0
 		
 		@background = generate_bg
 		@death_screen = Surface.load "models/Backgrounds/game_over.png"
@@ -424,8 +423,12 @@ class Game
 			
 			if @direction == 'w'
 				@direction = 1337
+				@jump_lander = 1
 			elsif @direction == 1337 && @dino.jump_trigger == 0 && @dino.last_dir == 42
 				@direction = 42
+			elsif @jump_lander == 1 && @dino.jump_trigger == 0
+				@direction = 42
+				@jump_lander = 0
 			end
 			
 			achieve
