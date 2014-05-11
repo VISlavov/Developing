@@ -2,206 +2,17 @@ require 'rubygems'
 require 'rubygame'
 require 'rubygoo'
 require './create_gui.rb'
+require './player.rb'
+require './enemy.rb'
 require "rubytrackselector"
+require 'csv'
 
 include Rubygame
 include Rubygoo
 include CreateGui
+include Sprites::Sprite
 
 class Game
-	
-	class Enemy
-	
-		attr_accessor :curr_x, :curr_y, :speed
-		include Sprites::Sprite
-		
-		def initialize type
-			@image1 = Surface.load 'models/Stuff/PacMan_1.png'
-			@image2 = Surface.load 'models/Stuff/PacMan_2.png'
-			
-			@image3 = Surface.load 'models/Stuff/Eye_1.png'
-			@image4 = Surface.load 'models/Stuff/Eye_2.png'
-			@image5 = Surface.load 'models/Stuff/Eye_3.png'
-			@image6 = Surface.load 'models/Stuff/Eye_4.png'
-			@image7 = Surface.load 'models/Stuff/Eye_5.png'
-			@image8 = Surface.load 'models/Stuff/Eye_6.png'
-			
-			if type == 'pac'
-				@image = @image1
-			elsif type == 'eye'
-				@image = @image3
-			end
-				
-			@curr_x = rand 1300
-			@curr_y = 0
-			@rect = @image.make_rect
-			@rect.center = [@curr_x, @curr_y]
-			@speed = 15
-		end
-		
-		def reset mandatory = 0
-			if (@curr_x < 0 || @curr_y > 800) || mandatory == 1
-				@curr_x = rand(400) + rand(400) + rand(42) + rand(200) + rand(200)
-				@curr_y = 0
-			end
-		end
-
-		def move
-			case @image
-				when @image7
-					@image = @image3
-				when @image6
-					@image = @image7
-				when @image5
-					@image = @image6
-				when @image4
-					@image = @image5
-				when @image3
-					@image = @image4
-				when @image2
-					@image = @image1
-				when @image1
-					@image = @image2
-			end
-			
-			@rect.center = [@curr_x = @curr_x - @speed / 1.5, @curr_y = @curr_y + @speed]
-			
-			reset
-		end
-		
-	end
-
-	class Player
-	
-		include Sprites::Sprite
-		attr_accessor :breaker, :curr_x, :curr_y, :game_loss, :jump_trigger, :jump_ascending, :last_dir
-		
-		def initialize
-			@image1 = Surface.load 'models/Stuff/Forward_1.png'
-			@image2 = Surface.load 'models/Stuff/Forward_2.png'
-			@image3 = Surface.load 'models/Stuff/Back_1.png'
-			@image4 = Surface.load 'models/Stuff/Back_2.png'
-			@image5 = Surface.load 'models/Stuff/Back_1.png'
-			@image6 = Surface.load 'models/Stuff/Forward_1.png'
-			
-			@image = @image1
-			
-			@breaker = 1
-			@game_loss = 0
-			@curr_x = 74
-			@curr_y = 350
-			@rect = @image.make_rect
-			@rect.center = [@curr_x, @curr_y]
-			@speed = 30
-			@jump_height = 300
-			@jump_speed = 10
-			@jump_trigger = 0
-			@jump_ascending = 1
-			@last_dir = ''
-		end
-		
-		def reset bg, mandatory = 0
-			if @curr_x >= 1024 || mandatory != 0
-				@curr_x = -20
-				1337
-			else
-				bg
-			end
-		end
-
-		def change_frame mode, jump
-			if jump == 1
-				case mode
-					when 'd'
-						@image = @image6
-					when 'a'
-						@image = @image5
-					when 42, 1337
-						return 0
-				end
-			else
-				case mode
-					when 'd'
-						image1 = @image1
-						image2 = @image2
-					when 'a'
-						image1 = @image3
-						image2 = @image4
-					when 42, 1337
-						return 0
-				end
-				
-				case @image
-					when @image5
-						@image = image1
-					when @image6
-						@image = image2
-					when @image2, @image4
-						@image = image1
-					when @image1, @image3
-						@image = image2
-				end
-			end
-		end
-		
-		def jump
-			if @curr_y > @jump_height
-				if @jump_ascending == 1
-					@rect.center = [@curr_x, @curr_y = @curr_y - @jump_speed]
-				elsif @jump_ascending == -1
-					@rect.center = [@curr_x, @curr_y = @curr_y + @jump_speed]
-				end
-			elsif @curr_y = @jump_height
-				@jump_ascending = -1
-				@curr_y = @curr_y + @jump_speed
-			end
-			
-			@curr_y
-		end
-		
-		def move dir, bg
-			cycle = 1
-			
-			while cycle == 1
-				case dir
-					when 'w', 1337
-						if dir == 'w'
-							@jump_trigger = 1
-						end
-						if @last_dir != 'a' && @last_dir != 'd'
-							cycle = 0
-						elsif @breaker == 0
-							dir = @last_dir
-						else
-							@last_dir = 42
-							cycle = 0
-						end
-					when 'a'
-						if @curr_x > -46
-							@rect.center = [@curr_x = @curr_x - @speed, @curr_y]
-						end
-						cycle = 0
-					when 'd'
-						@rect.center = [@curr_x = @curr_x + @speed, @curr_y]
-						cycle = 0
-					else
-						cycle = 0
-				end
-			end
-			
-			if @jump_trigger == 1
-				if jump == 350
-					@jump_trigger = 0
-					@jump_ascending = 1
-				end
-			end
-			
-			change_frame dir, @jump_trigger
-			
-			reset bg
-		end
-		
-	end
 
 	def initialize
 		@screen = Rubygame::Screen.new [1024,480], 0, [Rubygame::HWSURFACE, Rubygame::DOUBLEBUF]
@@ -214,6 +25,9 @@ class Game
 
 		@first_iteration = 0
 		@first_iteration_2 = 0
+		@up_first_it = 0
+		@left_first_it = 0
+		@right_first_it = 0
 		
 		@dino = Player.new
 		@pac = Enemy.new 'pac'
@@ -221,11 +35,15 @@ class Game
 		@direction = 42
 		@mul_click = 0
 		@jump_lander = 0
+		@jump_blocker = 0
 		
 		@background = generate_bg
 		@death_screen = Surface.load "models/Backgrounds/game_over.png"
 		
 		@level_count = 1
+		@gained_achievements = Array.new()
+		@gained_achievements[0] = "No Achievements Gained"
+		@achievements_count = 0
 		
 		@dir_right = 0
 		@dir_left = 0
@@ -247,6 +65,8 @@ class Game
 		@render_adapter = @factory.renderer_for :rubygame, @screen
 		@app = create_gui @render_adapter, @rts
 		@app_adapter = @factory.app_for :rubygame, @app
+		@label = ''
+		@level_lavel = ''
 	end
 	
 	def collision_check evil, good
@@ -274,23 +94,193 @@ class Game
 	end
 	
 	def achieve
+		
 		achv_check = false
 		achv_1 = Surface.load "models/Achievement/The_Bolt.png"
 		achv_2 = Surface.load "models/Achievement/The_Angry_Old_Guy.png"
 		achv_3 = Surface.load "models/Achievement/Black_Spiderman.png"
 		if achv_check == false
-			if @dir_right >= 25 && @dir_right < 30
+			if @dir_right == 25
 				achv_1.blit @screen,[650,20]
 				achv_check = true
-				@clock.target_framerate = 200
-			elsif @dir_left >= 50 && @dir_left < 55
+				if @right_first_it == 0
+					@clock.target_framerate = 100
+					@gained_achievements[@achievements_count] = 'The Bolt'
+					@achievements_count = @achievements_count + 1
+					@right_first_it = 1
+				end
+			elsif @dir_left == 50
 				achv_2.blit @screen,[650,20]
 				achv_check = true
-				@clock.target_framerate = 10
-			elsif @dir_up >= 73 && @dir_up < 78
+				if @left_first_it == 0
+					@clock.target_framerate = @clock.target_framerate - 15
+					@gained_achievements[@achievements_count] = 'The Angry Old Guy'
+					@achievements_count = @achievements_count + 1
+					@left_first_it = 1
+				end
+			elsif @dir_up == 73
 				achv_3.blit @screen,[650,20]
 				achv_check = true
+				if @up_first_it == 0
+					@jump_blocker = 1
+					@gained_achievements[@achievements_count] = 'The Black Spiderman'
+					@achievements_count = @achievements_count + 1
+					@up_first_it = 1
+				end
 			end
+		end
+	end
+	
+	def write_csv file, data
+		i = 0
+		CSV.open(file, "w") do |file|
+			file << ['Level ' + @level_count.to_s]
+			while i < data.length
+				file << [data[i]]
+				i = i + 1
+			end
+		end
+	end
+	
+	def parse_csv file, rows
+		if rows == 'all'
+			start_rows = 0
+		else
+			start_rows = rows
+		end
+		
+		data = Array.new()
+		
+		CSV.foreach(file) do |row|
+			if rows == 'all'
+				data[start_rows] = row.inspect
+				start_rows = start_rows + 1
+			else				
+				data[start_rows - rows] = row.inspect
+				
+				rows = rows - 1
+				if rows == 0
+					return data
+				end
+			end
+		end
+		
+		data
+	end
+	
+	def find_empty_save save1, save2, save3, first_run = 0
+		i = 1
+		if first_run == 0
+			target_save = 1337
+		else
+			target_save = 42
+		end
+		
+		while i <= 3
+			if !(File.exist?('save' + i.to_s + '.csv'))
+				if target_save != 1337
+					case i
+						when 1
+							save1.hide
+						when 2
+							save2.hide
+						when 3
+							save3.hide
+					end
+				else
+					target_save = i
+					
+					case target_save
+						when 1
+							save1.show
+						when 2
+							save2.show
+						when 3
+							save3.show
+					end
+				end
+			end
+			
+			i = i + 1
+		end
+		
+		target_save
+	end
+	
+	def show_save_content num, modal, save_button, shown
+		if shown != 0
+			@label.hide
+			@level_label.hide
+			@delete_butt.hide
+			@load_butt.hide
+		end
+		
+		@label = TextField.new("Save " + num.to_s + ":", :x=>350, :y=>30, :padding_left=>10, :relative=>true)
+		@level_label = TextField.new((parse_csv 'save' + num.to_s + '.csv', 1)[0].tr('[]""', ''), :x=>330, :y=>70, :padding_left=>10, :relative=>true)
+		@delete_butt = Button.new("Delete", :x=>300, :y=>130, :padding_left=>10, :padding_top=>10, :relative=>true)
+		@load_butt = Button.new("Load", :x=>430, :y=>130, :padding_left=>10, :padding_top=>10, :relative=>true)
+		
+		@delete_butt.on :pressed do |*opts|
+			File.delete('save' + num.to_s + '.csv')
+			@delete_butt.hide
+			@load_butt.hide
+			@level_label.hide
+			@label.hide
+			save_button.hide
+		end
+		
+		@load_butt.on :pressed do |*opts|
+			saved_data = parse_csv ('save' + num.to_s + '.csv'), 'all'
+			
+			i = 1
+			while i < saved_data.length
+				if i == 7
+					saved_data[i] = saved_data[i].to_s.tr('"[]\\', '').split(', ')
+				else
+					saved_data[i] = saved_data[i].tr('"[]', '').to_i
+				end
+				i = i + 1
+			end
+			
+			@eye.speed = saved_data[1]
+			@pac.speed = saved_data[2]
+			@clock.target_framerate = saved_data[3]
+			@jump_blocker = saved_data[4]
+			@presses = saved_data[5]
+			@level_count = saved_data[6]
+			
+			i = 0
+			while i < saved_data[7].length
+				@gained_achievements[i] = saved_data[7][i]
+				i = i + 1
+			end		
+						
+			@dir_left = saved_data[8]
+			@dir_right = saved_data[9]
+			@dir_up = saved_data[10]
+			@right_first_it = saved_data[11]
+			@left_first_it = saved_data[12]
+			@up_first_it = saved_data[13]
+			@change_view = 1
+		end
+		
+		modal.add @delete_butt, @load_butt, @label, @level_label
+		
+		if shown != 0
+			@load_butt.show
+			@delete_butt.show
+		end
+		
+		num
+	end
+	
+	def set_highscore
+		if File.exist?('highscore.csv')		
+			if (parse_csv 'highscore.csv', 1).to_s.split(' ')[1].tr('"]', '').to_i < @level_count
+				write_csv "highscore.csv", @gained_achievements
+			end
+		else
+			write_csv "highscore.csv", @gained_achievements
 		end
 	end
 	
@@ -307,6 +297,7 @@ class Game
 				@level_count = @level_count + 1
 				@presses = @dir_left + @dir_right + @dir_up
 				@background = generate_bg
+				@dino.move 'd', @background
 				@eye.speed = (@pac.speed = @pac.speed + 2.5)
 				@eye.reset 1
 				@pac.reset 1
@@ -316,8 +307,17 @@ class Game
 				@background = @dino.move @direction, @background
 			end
 		elsif @dino.game_loss != 0
+			set_highscore
+			@clock.target_framerate = 30
+			@jump_blocker = 0
 			@presses = 0
 			@level_count = 1
+			@gained_achievements = Array.new()
+			@gained_achievements[0] = "No Achievements Gained"
+			@achievements_count = 0
+			@right_first_it = 0
+			@left_first_it = 0
+			@up_first_it = 0
 			@dir_left = 0
 			@dir_right = 0
 			@dir_up = 0
@@ -357,10 +357,12 @@ class Game
 						when K_ESCAPE
 							@change_view = 0
 						when K_W
-							@direction = 'w'
+							if @jump_blocker == 0							
+								@direction = 'w'
+							end
 							@dir_up = @dir_up + 1
 						when K_A, K_D
-							if @direction != 42
+							if @direction == 'a' || @direction == 'd' || (@direction == 1337 && @dino.breaker == 0)
 								@mul_click = 1
 							else
 								@mul_click = 0
@@ -426,8 +428,8 @@ class Game
 				@jump_lander = 1
 			elsif @direction == 1337 && @dino.jump_trigger == 0 && @dino.last_dir == 42
 				@direction = 42
+				@jump_lander = 0
 			elsif @jump_lander == 1 && @dino.jump_trigger == 0
-				@direction = 42
 				@jump_lander = 0
 			end
 			
@@ -451,6 +453,7 @@ class Game
 	def draw
 		@screen.update
 	end
+	
 end
 
 game = Game.new
