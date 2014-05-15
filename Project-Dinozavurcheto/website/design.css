@@ -490,9 +490,11 @@
 		color:black;
 		visibility:visible;	
 	}
+	
 	body {
 		visibility:hidden;	
 	}
+	
 	audio {
 		visibility:hidden;	
 	}
