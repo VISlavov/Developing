@@ -1,0 +1,35 @@
+class prevozno sredstvo s poleta :
+	tip ( dali e kola , lodka , minibus , tovarno );
+	marka ( bmw, audi ...);
+	model;
+	godina;
+	cena;
+	cvqt;
+	dvigatel(dizelov,benzinov,hibrid ..);
+	broi vrati;
+	skorostna kutiq:
+	
+	
+Da ima podhodq6ti konstruktori na klasa , kakto i geteri i seteri na poletata.
+Iskam metod koito ti vry6ta String-ov rezultat sydyrja6t markata , model i godinata na prevoznoto sredstvo ( primerno da mi vry6ta :  "Ford fiesta 1997");
+ 	
+class user koito sydyrja poletata:
+  ime;
+  familiq;
+  vyzrast;
+  pol;
+  pari;( s kolko pari razpolaga 4oveka)
+  
+  Iskam metod na koito mu podava6 ime i familiq i ti vry6ta vsi4ki koli koito moje da kupi tozi 4ovek;
+	Iskam metod na koito mu podava6 pol i vyzrast i ti vry6ta sredno s kolko pari razpolagat userite ot tozi pol, koito s ane po vyzrastni ot poso4enata vyzrast.
+	
+	
+	Iskam da promeni6 klasovete taka 4e usera da moje da pritejava nqkolko koli. da moje kato ima6 instanciqta na usera da moje6 da vzeme6 instaciite na kolite koito toi pritejava;
+	Ako ima6 instanciqta na dadena kola da moje6 da vidi6 koi e sobstvenika na kolata ( ime i familiq). edna kola moje da ima samo edin sobstvenik , dokato edin user moje da ima mnogo koli.
+	Ti preceni kak 6te pokaje6 zavisimostta mejdu user i prevozno sredstvo v samite klasove.
+	
+	Iskam metod na koito da mi vry6ta spisyk ot vsi4ki unikalni marki prevozni sredstva.
+	
+	Iskam metod koito za daden user imaiki predvid kolko pari ima smqta kakvi koli moje da si kupi , taka 4e da mu ostanat vyzmojno nai malko pari, metoda vry6ta spisyk ot kolite koito moje da si kupi; 
+	Primer: ivan ima 13000; kolite na pazara sa : pejo 2000,mazda 7000,bmw 9000,audi 5000,bentley 23000; 
+	v slu4aq metoda trqbva da vyrne spisyk v koito sa mazda-ta i audi-to.
