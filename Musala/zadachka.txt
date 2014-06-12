@@ -33,3 +33,10 @@ class user koito sydyrja poletata:
 	Iskam metod koito za daden user imaiki predvid kolko pari ima smqta kakvi koli moje da si kupi , taka 4e da mu ostanat vyzmojno nai malko pari, metoda vry6ta spisyk ot kolite koito moje da si kupi; 
 	Primer: ivan ima 13000; kolite na pazara sa : pejo 2000,mazda 7000,bmw 9000,audi 5000,bentley 23000; 
 	v slu4aq metoda trqbva da vyrne spisyk v koito sa mazda-ta i audi-to.
+	
+	
+Next:
+
+Razhodno gorivo kum Vehicle (1.0 format) da se dobavi kum kratkata info
+Class Route - fields: roadName, length, cena na gorivoto v marshruta
+Method(user, route) -> assign car + have enough money for route
