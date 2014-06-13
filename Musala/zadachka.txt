@@ -40,3 +40,16 @@ Next:
 Razhodno gorivo kum Vehicle (1.0 format) da se dobavi kum kratkata info
 Class Route - fields: roadName, length, cena na gorivoto v marshruta
 Method(user, route) -> assign car + have enough money for route
+
+Next 2:
+
+4 putisyshta, 5 koli - kak nai-burzo da minat po putishtata kato moje da ima samo po 1 kola na 1 put;
+class driver - skill => 0.8-1.2, experience, preffered_brand => aako ne e liubimata mu kola skill pada s 0.2
+max speed => car
+vsqka kola e nishka
+
+
+
+
+
+
