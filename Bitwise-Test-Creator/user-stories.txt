@@ -7,8 +7,9 @@
 	2. Use C file parser to generate C files
 	
 - Create C file starter:
-	1. Run C files
-	2. Create HTML from output
+	1. Compile files
+	2. Run C files
+	3. Create HTML from output
 
 - Create HTML file parser:
 	1. Translate from C to HTML (Use C file parser for half of it)
