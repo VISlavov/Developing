@@ -1,5 +1,6 @@
 - Create C file parser:
 	1. Write and read C files
+	2. Generate C temlate
 
 - Generate questions and get them in C files:
 	1. Algorithm for each type of question on first difficulty
