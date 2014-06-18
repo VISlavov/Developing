@@ -1,24 +1,44 @@
-def write_separated_rows info, file
-	info.each do |row|
-		file.puts enhanced_writing(row)
+class C_parser
+	
+	def initialize
+		@@organizer = Organizer.new
+		@@header = ["#include <stdio.h>", "int main()", "{"]
+		@@tail = ["return 0", "}"]
 	end
-end
-
-def enhanced_writing row
-	if(row == "}" || row == "{" || row == "#include <stdio.h>" || row == "int main()")
-		full_row = row + "\n"
-	else
-		full_row = row + ";\n"
+	
+	def write_separated_rows info, file
+		info.each do |row|
+			file.puts enhanced_writing(row)
+		end
 	end
-end
+	
+	def generate_exceptions
+		exceptions = []
+		
+		@@header.each do |elem|
+			exceptions << elem
+		end
+		
+		exceptions << @@tail[1]
+		
+		exceptions
+	end
 
-def fill_file info
-	header = ["#include <stdio.h>", "int main()", "{"]
-	tail = ["return 0", "}"]
+	def enhanced_writing row
+		if(generate_exceptions().include? row)
+			full_row = row + "\n"
+		else
+			full_row = row + ";\n"
+		end
+	end
 
-	File.open("../templates/template.c", "a+") do |f|
-		write_separated_rows header, f
-		write_separated_rows info, f
-		write_separated_rows tail, f
+	def fill_file info, file
+		@@organizer.rm file
+		
+		File.open(file, "a+") do |f|
+			write_separated_rows @@header, f
+			write_separated_rows info, f
+			write_separated_rows @@tail, f
+		end
 	end
 end
