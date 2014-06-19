@@ -20,15 +20,20 @@ class C_parser
 		end
 		
 		exceptions << @@tail[1]
+		exceptions << "else"
 		
 		exceptions
 	end
 
 	def enhanced_writing row
-		if(generate_exceptions().include? row)
+		if generate_exceptions().include? row
 			full_row = row + "\n"
 		else
-			full_row = row + ";\n"
+			if row =~ /\bif\b/
+				full_row = row + "\n"
+			else
+				full_row = row + ";\n"
+			end
 		end
 	end
 

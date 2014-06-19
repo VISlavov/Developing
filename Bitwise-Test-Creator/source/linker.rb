@@ -5,7 +5,7 @@ require './c-runner.rb'
 require './generator.rb'
 require './organizer.rb'
 
-def ensureCorrectPath path
+def ensure_correct_path path
 	if path[path.length - 1] != '/'
 		path += '/'
 	end
@@ -15,7 +15,7 @@ end
 
 count = ARGV[0].to_i
 level = ARGV[1].to_i
-path = ensureCorrectPath ARGV[2]
+path = ensure_correct_path ARGV[2]
 
 
 generator = Generator.new(level, path)

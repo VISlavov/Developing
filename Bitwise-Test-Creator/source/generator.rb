@@ -3,10 +3,12 @@ require 'securerandom'
 class Generator
 	def initialize level, path
 		@@level = level
-		@@orig = generate_hex.to_s(16).upcase()
-		@@orig = ensure_length @@orig
-		@@insert = generate_hex.to_s(16).upcase()
-		@@insert = ensure_length @@insert
+		@@orig = generate_hex(4).to_s(16).upcase()
+		@@orig = ensure_length @@orig, 4 * @@level
+		@@orig = prepend_hex_id @@orig, 4
+		@@insert = generate_hex(4).to_s(16).upcase()
+		@@insert = ensure_length @@insert, 4 * @@level
+		@@insert = prepend_hex_id @@insert, 4
 		@@organizer = Organizer.new
 		@@c_parser = C_parser.new
 		@@path = path
@@ -52,18 +54,50 @@ class Generator
 	end
 	
 	def generate_type5 
+		program_body = []
+		program_body << 'int i = ' + @@orig
+		program_body << 'int left = ' + @@orig + ' | (1 << ' + generate_dec(2) + ')'
+		program_body << 'printf("%d", left)'
+	end
+	
+	def generate_type6
+		rand = ensure_length(generate_hex(8).to_s(16).upcase, 4 * @@level)
+		rand = prepend_hex_id(rand, 8)
+		
+		rand2 = ensure_length(generate_hex(8).to_s(16).upcase, 4 * @@level)
+		rand2 = prepend_hex_id(rand2, 8)
+		
+		program_body = []
+		program_body << 'long value1 = ' + rand
+		program_body << 'long value2 = ' + rand2
+		program_body << 'int result = (value1 << ' + generate_dec(2)  + ') ^ (value2 >> ' + generate_dec(@@level) + ')'
+		program_body << 'printf("%d", result)'
+	end
+	
+	def generate_type7
+		rand = ensure_length(generate_hex(8).to_s(16).upcase, 4 * @@level)
+		
+		rand = prepend_hex_id(rand, 8)
+		
+		program_body = []
+		program_body << 'long testValue = ' + rand
+		program_body << 'int a = 0'
+		program_body << 'if (testValue & (1 << ' + generate_dec(@@level) + '))'
+		program_body << '{'
+		program_body << '	a = 1'
+		program_body << '}'
+		program_body << 'else'
+		program_body << '{'
+		program_body << '	a = 2'
+		program_body << '}'
+		program_body << 'printf("%d", a)'
+	end
+	
+	def generate_type8
 	
 	end
 	
-	def generate_type6 
-	
-	end
-	
-	def generate_type7 
-	
-	end
-	
-	def generate_type8 
+	def generate_type9
 	
 	end
 	
@@ -73,28 +107,36 @@ class Generator
 		@@c_parser.fill_file generate_type2, @@path + "exam_files/c/3.c"
 		@@c_parser.fill_file generate_type3, @@path + "exam_files/c/4.c"
 		@@c_parser.fill_file generate_type4, @@path + "exam_files/c/5.c"
+		@@c_parser.fill_file generate_type5, @@path + "exam_files/c/6.c"
+		@@c_parser.fill_file generate_type6, @@path + "exam_files/c/7.c"
+		@@c_parser.fill_file generate_type7, @@path + "exam_files/c/8.c"
 	end
 	
-	def generate_hex
+	def generate_hex length
 		rand = 0
+		if length == 4
+			nullifier = '0f0f'
+		else
+			nullifier = 'ff00'
+		end
 		
 		if @@level == 1
-			while (rand = SecureRandom.hex(2).hex & '0f0f'.hex) == 0
+			while (rand = SecureRandom.hex(2).hex & nullifier.hex) == 0
 			end
 		else
-			rand = SecureRandom.hex(2).hex
+			while (rand = SecureRandom.hex(length/2).hex) == 0
+			end
 		end
 		
 		rand
 	end
 	
-	def ensure_length string
-		while string.length < 4
+	def ensure_length string, length
+		while string.length < length
 			string.insert 0, "0"
 		end
 		
-		string.insert 0, "x"
-		string.insert 0, "0"
+		string
 	end
 	
 	def generate_dec level
@@ -130,5 +172,14 @@ class Generator
 		end
 		
 		array
+	end
+	
+	def prepend_hex_id string, length
+		if @@level == 1 && length == 8
+			string = string + string
+		end
+		
+		string.insert 0, "x"
+		string.insert 0, "0"
 	end
 end
