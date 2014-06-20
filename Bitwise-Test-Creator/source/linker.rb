@@ -18,7 +18,7 @@ level = ARGV[1].to_i
 path = ensure_correct_path ARGV[2]
 
 organizer = Organizer.new
-c_parser = C_parser.new
+c_parser = C_parser.new(organizer)
 
 organizer.mkdir path, "tests"
 
@@ -27,8 +27,9 @@ organizer.setup_base_folders path += "tests/", count
 generator = Generator.new(level, path, c_parser)
 generator.generate_all count
 
-runner = C_runner.new(path, count)
-runner.compile()
+html_parser = Html_parser.new(organizer)
+runner = C_runner.new(path, count, generator, html_parser)
+runner.create_makefile_and_compile()
 
 
 

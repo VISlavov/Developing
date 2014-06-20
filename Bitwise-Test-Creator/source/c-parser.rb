@@ -1,7 +1,7 @@
 class C_parser
 	
-	def initialize
-		@@organizer = Organizer.new
+	def initialize organizer
+		@@organizer = organizer
 		@@header = ["#include <stdio.h>", "int main()", "{"]
 		@@tail = ["return 0", "}"]
 	end

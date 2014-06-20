@@ -95,8 +95,8 @@ class Generator
 		program_body = generate_type7()
 		program_body = remove_array_part program_body, [2]
 		program_body.insert 2, 'int result = 0'
-		program_body.insert 3, 'if (testValue & testValue ^ testValue | (1 << ' + generate_dec(@@level) + '))'
-		program_body = append_to_array_end program_body, [], 'printf("%d, %d", a, result)'
+		program_body.insert 3, 'if ( (result = testValue & testValue ^ testValue | (1 << ' + generate_dec(@@level) + ')) )'
+		program_body = append_to_array_end program_body, [], 'printf("[%d,%d]", a, result)'
 	end
 	
 	def generate_type10 operator
@@ -203,7 +203,7 @@ class Generator
 		array
 	end
 	
-	def prepend_hex_id string, length
+	def prepend_hex_id string, length = 0
 		if @@level == 1 && length == 8
 			string = string + string
 		end
