@@ -46,4 +46,5 @@ class C_parser
 			write_separated_rows @@tail, f
 		end
 	end
+	
 end

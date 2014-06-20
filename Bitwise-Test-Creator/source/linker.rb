@@ -17,10 +17,18 @@ count = ARGV[0].to_i
 level = ARGV[1].to_i
 path = ensure_correct_path ARGV[2]
 
+organizer = Organizer.new
+c_parser = C_parser.new
 
-generator = Generator.new(level, path)
-generator.generate_all()
-#generator.generate_type2()
+organizer.mkdir path, "tests"
+
+organizer.setup_base_folders path += "tests/", count
+
+generator = Generator.new(level, path, c_parser)
+generator.generate_all count
+
+runner = C_runner.new(path, count)
+runner.compile()
 
 
 
