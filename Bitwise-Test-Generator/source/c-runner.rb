@@ -28,10 +28,11 @@ class C_runner
 			
 			
 			@@html_parser.create_answer_html results, @@path, i.to_s
-			@@pdf_parser.send_html_to_pdf full_path + "/answers/" + "html/answers.html", full_path + "/answers/" + "pdf/answers.pdf"
+			@@pdf_parser.send_html_to_pdf full_path + "/answers/" + "html/answers.html",
+														full_path + "/answers/" + "pdf/answers.pdf"
 			
 			results.clear
-			@@organizer.rm_dir path
+			#@@organizer.rm_dir path
 			
 			i = i + 1
 		end

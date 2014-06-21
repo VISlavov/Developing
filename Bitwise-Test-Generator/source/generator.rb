@@ -119,26 +119,34 @@ class Generator
 	
 	def generate_all count, html_parser
 		i = 0
+		generated = []
 		html_parser.add_style("questions")
 		
 		while i < count
+			generated << generate_type1
+			generated << generate_type1(true)
+			generated << generate_type2
+			generated << generate_type3
+			generated << generate_type4
+			generated << generate_type5
+			generated << generate_type6
+			generated << generate_type7
+			generated << generate_type8
+			generated << generate_type9
+			generated << generate_type10("^")
+			generated << generate_type10("|")
+			
 			number = i.to_s + "/questions/c/"
 			
-			@@c_parser.fill_file generate_type1, @@path + number + "1.c"
-			@@c_parser.fill_file generate_type1(true), @@path + number + "2.c"
-			@@c_parser.fill_file generate_type2, @@path + number + "3.c"
-			@@c_parser.fill_file generate_type3, @@path + number + "4.c"
-			@@c_parser.fill_file generate_type4, @@path + number + "5.c"
-			@@c_parser.fill_file generate_type5, @@path + number + "6.c"
-			@@c_parser.fill_file generate_type6, @@path + number + "7.c"
-			@@c_parser.fill_file generate_type7, @@path + number + "8.c"
-			@@c_parser.fill_file generate_type8, @@path + number + "9.c"
-			@@c_parser.fill_file generate_type9, @@path + number + "10.c"
-			@@c_parser.fill_file generate_type10("^"), @@path + number + "11.c"
-			@@c_parser.fill_file generate_type10("|"), @@path + number + "12.c"
+			for i1 in 0..11
+				file = (i1 + 1).to_s + ".c"
+				@@c_parser.fill_file generated[i1], @@path + number + file
+				generated[i1].remove_array_part(generated[i1], generated[i1].length - 1)
+			end
 			
-			#remove_array_part array, indexes
+			html_parser.create_question_html generated, @@path + number
 			
+			generated.clear
 			i = i + 1
 		end
 	end

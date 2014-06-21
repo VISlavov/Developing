@@ -42,7 +42,7 @@ class Html_parser
 		end
 	end
 	
-	def create_question_html results, path, number
+	def create_question_html info, path, number
 		html_body = []
 		bin = ""
 		hex = ""
