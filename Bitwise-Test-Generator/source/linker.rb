@@ -21,6 +21,8 @@ organizer = Organizer.new
 c_parser = C_parser.new(organizer)
 pdf_parser = Pdf_parser.new()
 
+puts 'The program will be processing your request for a while, please wait...'
+
 organizer.rm_dir(path + "tests")
 organizer.mkdir path, "tests"
 
