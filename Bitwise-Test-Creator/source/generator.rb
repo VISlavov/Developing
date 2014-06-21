@@ -20,12 +20,18 @@ class Generator
 		@@stable_dec2 = generate_dec(2)
 	end
 
-	def generate_type1
+	def generate_type1 harder = false
 		program_body = []
+		
+		if harder == true
+			level = 2
+		else
+			level = @@level
+		end
 		
 		program_body << 'int orig = ' + @@orig
 		program_body << 'int insert = ' + @@insert
-		program_body << 'int a = orig | (insert << ' + generate_dec(@@level) + ')'
+		program_body << 'int a = orig | (insert << ' + generate_dec(level) + ')'
 		program_body << 'printf("%d", a)'
 	end
 	
@@ -96,7 +102,7 @@ class Generator
 		program_body = remove_array_part program_body, [2]
 		program_body.insert 2, 'int result = 0'
 		program_body.insert 3, 'if ( (result = testValue & testValue ^ testValue | (1 << ' + generate_dec(@@level) + ')) )'
-		program_body = append_to_array_end program_body, [], 'printf("[%d,%d]", a, result)'
+		program_body = append_to_array_end program_body, [], 'printf("[%d; %d]", a, result)'
 	end
 	
 	def generate_type10 operator
@@ -115,7 +121,7 @@ class Generator
 			number = i.to_s + "/questions/c/"
 			
 			@@c_parser.fill_file generate_type1, @@path + number + "1.c"
-			@@c_parser.fill_file generate_type1, @@path + number + "2.c"
+			@@c_parser.fill_file generate_type1(true), @@path + number + "2.c"
 			@@c_parser.fill_file generate_type2, @@path + number + "3.c"
 			@@c_parser.fill_file generate_type3, @@path + number + "4.c"
 			@@c_parser.fill_file generate_type4, @@path + number + "5.c"

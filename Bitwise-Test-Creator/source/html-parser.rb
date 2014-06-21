@@ -12,9 +12,9 @@ class Html_parser
 		end
 	end
 	
-	def create_div info
-		info.insert 0, '<div>'
-		info.insert info.length, '</div>'
+	def create_tag info, tag = 'div'
+		info.insert 0, (tag = tag.insert(0, '<')).insert(tag.length, '>')
+		info.insert info.length, (tag.insert 1, '/')
 		
 		info
 	end
@@ -34,10 +34,10 @@ class Html_parser
 			@@header.delete_at(@@header.length - 1)
 		end
 			
-		if target == "answers"
-			@@header << "<style type='text/css' src='answers.css'> </style>"
+		if target == 'answers'
+			@@header << '<link rel="stylesheet" type="text/css" href="answers.css">'
 		else
-			@@header << "<style type='text/css' src='questions.css'> </style>"
+			@@header << '<link rel="stylesheet" type="text/css" href="questons.css">'
 		end
 	end
 	

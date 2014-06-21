@@ -5,6 +5,8 @@ class C_runner
 		@@path = path
 		@@generator = generator
 		@@organizer = organizer
+		@@html_parser = html_parser
+		@@html_parser.add_style_target("answers")
 	end
 	
 	def create_makefile_and_compile
@@ -23,9 +25,7 @@ class C_runner
 				results << `./#{path}#{i1}`
 			end
 			
-			puts "------------"
-			send_to_html results
-			puts "------------"
+			send_to_html results, @@path, i.to_s
 			
 			results.clear
 			i = i + 1
@@ -50,26 +50,42 @@ class C_runner
 			when 16
 				for i1 in 0..many.length - 1
 					many[i1] = many[i1].to_i
-					many[i1] = @@generator.prepend_hex_id(many[i1].to_s(16));
+					many[i1] = @@generator.prepend_hex_id(many[i1].to_s(16))
 				end
 			else
 				nil
 		end
 		
-		many.to_s.gsub(/[^A-Za-z0-9-]/, "    ").strip
+		many.to_s.gsub(/[^A-Za-z0-9-]/, " ").strip.gsub("    ", "; ");
 	end
 	
-	def send_to_html results
+	def send_to_html results, path, number
+		html_body = []
+		bin = ""
+		hex = ""
+		path += number + "/answers/html/answers.html"
+		i = 1
+		
+		html_body << @@html_parser.create_tag('Answers for test ' + number, 'h1')
+		
 		results.each do |str|
-			p str
+			bin = transform str, 2
+			hex = transform str, 16
+			
+			html_body << @@html_parser.create_tag('Question ' + i.to_s, 'h2')
+			
+			html_body << @@html_parser.create_tag('Answer as decimal:', 'h4')
+			html_body << @@html_parser.create_tag(str)
+			
+			html_body << @@html_parser.create_tag('Answer as binary:', 'h4')
+			html_body << @@html_parser.create_tag(bin)
+			
+			html_body << @@html_parser.create_tag('Answer as hex:', 'h4')
+			html_body << @@html_parser.create_tag(hex)
+			i = i + 1
 		end
-		puts ""
-		results.each do |str|
-			p transform str, 2
-		end
-		puts ""
-		results.each do |str|
-			p transform str, 16
-		end
+		
+		
+		@@html_parser.fill_file html_body, path
 	end
 end

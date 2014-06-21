@@ -30,11 +30,11 @@ class Organizer
 			mkdir temp_path + "questions/", "pdf"
 			mkdir temp_path + "questions/", "c"
 			
-			cp "../templates/questions.css", temp_path + "questions/html/"
-			cp "../templates/answers.css", temp_path + "answers/html/"
-			
 			mkdir temp_path + "answers/", "html"
 			mkdir temp_path + "answers/", "pdf"
+			
+			cp "../templates/questions.css", temp_path + "questions/html/"
+			cp "../templates/answers.css", temp_path + "answers/html/"
 			
 			i = i + 1
 		end
