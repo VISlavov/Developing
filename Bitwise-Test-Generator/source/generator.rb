@@ -136,15 +136,22 @@ class Generator
 			generated << generate_type10("^")
 			generated << generate_type10("|")
 			
-			number = i.to_s + "/questions/c/"
+			number = i.to_s
 			
 			for i1 in 0..11
 				file = (i1 + 1).to_s + ".c"
-				@@c_parser.fill_file generated[i1], @@path + number + file
-				generated[i1].remove_array_part(generated[i1], generated[i1].length - 1)
+				@@c_parser.fill_file(generated[i1], @@path + number + "/questions/c/" + file)
+				
+				searched = remove_array_part generated[i1][generated[i1].length - 1].split(','), [0]
+				
+				searched.each do |searched_value|
+					generated[i1].insert(0, searched_value.gsub(")", "") + ' = ?')
+				end
+				
+				remove_array_part(generated[i1], [generated[i1].length - 1])
 			end
 			
-			html_parser.create_question_html generated, @@path + number
+			html_parser.create_question_html generated, @@path, number
 			
 			generated.clear
 			i = i + 1

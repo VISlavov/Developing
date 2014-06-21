@@ -3,7 +3,7 @@ class Html_parser
 	def initialize organizer, generator
 		@@organizer = organizer
 		@@generator = generator
-		@@header = ["<DOCTYPE! html>", "<html>", "<body>"]
+		@@header = ["<!DOCTYPE html>", "<html>", "<head>", '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>',"</head>", "<body>"]
 		@@tail = ["</body>", "</html>"]
 	end
 	
@@ -42,29 +42,25 @@ class Html_parser
 		end
 	end
 	
-	def create_question_html info, path, number
+	def create_question_html generated, path, number
 		html_body = []
-		bin = ""
-		hex = ""
 		path += number + "/questions/html/questions.html"
 		i = 1
 		
-		html_body << create_tag('Answers for test ' + number, 'h1')
+		html_body << create_tag('Вариант ' + number, 'h1')
+		html_body << create_tag('Технологично училище "Електоронни системи"', 'h3')
+		html_body << create_tag('Тест побитови операции', 'h3')
 		
-		results.each do |str|
-			bin = transform str, 2
-			hex = transform str, 16
+		generated.each do |question|
+			html_body << create_tag('--- Excercise ' + i.to_s + ' ---', 'h4')
+			question.each do |line|
+				if(line.include? '= ?')
+					html_body << create_tag(line, 'b')
+				else
+					html_body << create_tag(line, 'p')
+				end
+			end
 			
-			html_body << create_tag('Question ' + i.to_s, 'h2')
-			
-			html_body << create_tag('Answer as decimal:', 'h4')
-			html_body << create_tag(str)
-			
-			html_body << create_tag('Answer as binary:', 'h4')
-			html_body << create_tag(bin)
-			
-			html_body << create_tag('Answer as hex:', 'h4')
-			html_body << create_tag(hex)
 			i = i + 1
 		end
 		
