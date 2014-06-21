@@ -28,7 +28,7 @@ generator = Generator.new(level, path, c_parser)
 generator.generate_all count
 
 html_parser = Html_parser.new(organizer)
-runner = C_runner.new(path, count, generator, html_parser)
+runner = C_runner.new(path, count, generator, html_parser, organizer)
 runner.create_makefile_and_compile()
 
 

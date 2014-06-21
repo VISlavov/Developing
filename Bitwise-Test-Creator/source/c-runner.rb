@@ -1,9 +1,10 @@
 class C_runner
 
-	def initialize path, count, generator, html_parser
+	def initialize path, count, generator, html_parser, organizer
 		@@count = count
 		@@path = path
 		@@generator = generator
+		@@organizer = organizer
 	end
 	
 	def create_makefile_and_compile
@@ -14,7 +15,8 @@ class C_runner
 		while i < @@count
 			path = @@path + i.to_s + "/questions/c/"
 			
-			`cp ../templates/Makefile #{path}`
+			@@organizer.cp '../templates/Makefile', path
+			
 			`make -C #{path}`
 			
 			for i1 in 1..12

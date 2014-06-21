@@ -102,8 +102,8 @@ class Generator
 	def generate_type10 operator
 		program_body = []
 		
-		program_body << 'int value1 = ' + generate_dec(@@level, 1)
-		program_body << 'int value2 = ' + generate_dec(@@level, 1)
+		program_body << 'int value1 = ' + generate_dec(@@level, true)
+		program_body << 'int value2 = ' + generate_dec(@@level, true)
 		program_body << 'int result = (value1 << ' + generate_dec(2) + ') ' + operator +  ' (value2 >> ' + generate_dec(@@level) + ')'
 		program_body << 'printf("%d", result)'
 	end
@@ -158,10 +158,10 @@ class Generator
 		string
 	end
 	
-	def generate_dec level, large = 0
+	def generate_dec level, large = false
 		rand = 0
 		
-		if large == 1
+		if large == true
 			if level == 1
 				rand = SecureRandom.random_number(1000) + 100
 			else
@@ -197,7 +197,7 @@ class Generator
 	
 	def remove_array_part array, indexes
 		indexes.each do |index|
-			array.delete_at(index);
+			array.delete_at(index)
 		end
 		
 		array
