@@ -146,7 +146,7 @@ class Generator
 				searched = remove_array_part generated[i1][generated[i1].length - 1].split(','), [0]
 				
 				searched.each do |searched_value|
-					generated[i1].insert(0, searched_value.gsub(")", "") + ' = ?')
+					generated[i1].insert(0, searched_value.gsub(")", "") + ' = ?     .........................')
 				end
 				
 				remove_array_part(generated[i1], [generated[i1].length - 1])
