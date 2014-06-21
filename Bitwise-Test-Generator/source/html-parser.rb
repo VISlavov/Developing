@@ -48,11 +48,14 @@ class Html_parser
 		i = 1
 		
 		html_body << create_tag('Вариант ' + number, 'h1')
-		html_body << create_tag('Технологично училище "Електоронни системи"', 'h3')
-		html_body << create_tag('Тест побитови операции', 'h3')
+		html_body << create_tag('Технологично училище "Електоронни системи"', 'h4')
+		html_body << create_tag('Тест побитови операции', 'h4')
+		
+		html_body << '<ul>'
 		
 		generated.each do |question|
-			html_body << create_tag('--- Excercise ' + i.to_s + ' ---', 'h4')
+			html_body << '<li>'
+			html_body << create_tag('--- Excercise ' + i.to_s + ' ---', 'h5')
 			question.each do |line|
 				if(line.include? '= ?')
 					html_body << create_tag(line, 'b')
@@ -60,9 +63,12 @@ class Html_parser
 					html_body << create_tag(line, 'p')
 				end
 			end
+			html_body << '</li>'
 			
 			i = i + 1
 		end
+		
+		html_body << '</ul>'
 		
 		fill_file html_body, path
 	end
@@ -76,22 +82,28 @@ class Html_parser
 		
 		html_body << create_tag('Answers for test ' + number, 'h1')
 		
+		html_body << '<ul>'
+		
 		results.each do |str|
+			html_body << '<li>'
 			bin = transform str, 2
 			hex = transform str, 16
 			
 			html_body << create_tag('Question ' + i.to_s, 'h2')
 			
-			html_body << create_tag('Answer as decimal:', 'h4')
+			html_body << create_tag('Answer as decimal:', 'h5')
 			html_body << create_tag(str)
 			
-			html_body << create_tag('Answer as binary:', 'h4')
+			html_body << create_tag('Answer as binary:', 'h5')
 			html_body << create_tag(bin)
 			
-			html_body << create_tag('Answer as hex:', 'h4')
+			html_body << create_tag('Answer as hex:', 'h5')
 			html_body << create_tag(hex)
+			html_body << '</li>'
 			i = i + 1
 		end
+		
+		html_body << '</ul>'
 		
 		fill_file html_body, path
 	end

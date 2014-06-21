@@ -6,7 +6,7 @@ class C_runner
 		@@generator = generator
 		@@organizer = organizer
 		@@html_parser = html_parser
-		@@html_parser.add_style("answers")
+		@@html_parser.add_style("answers", true)
 		@@pdf_parser = pdf_parser
 	end
 	
@@ -32,7 +32,7 @@ class C_runner
 														full_path + "/answers/" + "pdf/answers.pdf"
 			
 			results.clear
-			#@@organizer.rm_dir path
+			@@organizer.rm_dir path
 			
 			i = i + 1
 		end

@@ -5,10 +5,10 @@ class Generator
 	def initialize level, path, c_parser, pdf_parser
 		@@level = level
 		@@orig = generate_hex(4).to_s(16).upcase()
-		@@orig = ensure_length @@orig, 4 * @@level
+		@@orig = ensure_length @@orig, 4
 		@@orig = prepend_hex_id @@orig, 4
 		@@insert = generate_hex(4).to_s(16).upcase()
-		@@insert = ensure_length @@insert, 4 * @@level
+		@@insert = ensure_length @@insert, 4
 		@@insert = prepend_hex_id @@insert, 4
 		
 		@@c_parser = c_parser
@@ -137,6 +137,7 @@ class Generator
 			generated << generate_type10("|")
 			
 			number = i.to_s
+			full_path = File.join(File.dirname(__FILE__), @@path + number)
 			
 			for i1 in 0..11
 				file = (i1 + 1).to_s + ".c"
@@ -152,6 +153,8 @@ class Generator
 			end
 			
 			html_parser.create_question_html generated, @@path, number
+			@@pdf_parser.send_html_to_pdf full_path + "/questions/" + "html/questions.html",
+														full_path + "/questions/" + "pdf/questions.pdf"
 			
 			generated.clear
 			i = i + 1
