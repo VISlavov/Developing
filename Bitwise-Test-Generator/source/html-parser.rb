@@ -30,16 +30,45 @@ class Html_parser
 		end
 	end
 	
-	def add_style_target target, swap = false
+	def add_style target, swap = false
 		if swap == true
 			@@header.delete_at(@@header.length - 1)
 		end
 			
 		if target == 'answers'
-			@@header << '<link rel="stylesheet" type="text/css" href="answers.css">'
+			@@header << create_tag(File.read("../templates/answers.css"), 'style')
 		else
-			@@header << '<link rel="stylesheet" type="text/css" href="questons.css">'
+			@@header << create_tag(File.read("../templates/questions.css"), 'style')
 		end
+	end
+	
+	def create_question_html results, path, number
+		html_body = []
+		bin = ""
+		hex = ""
+		path += number + "/questions/html/questions.html"
+		i = 1
+		
+		html_body << create_tag('Answers for test ' + number, 'h1')
+		
+		results.each do |str|
+			bin = transform str, 2
+			hex = transform str, 16
+			
+			html_body << create_tag('Question ' + i.to_s, 'h2')
+			
+			html_body << create_tag('Answer as decimal:', 'h4')
+			html_body << create_tag(str)
+			
+			html_body << create_tag('Answer as binary:', 'h4')
+			html_body << create_tag(bin)
+			
+			html_body << create_tag('Answer as hex:', 'h4')
+			html_body << create_tag(hex)
+			i = i + 1
+		end
+		
+		fill_file html_body, path
 	end
 	
 	def create_answer_html results, path, number

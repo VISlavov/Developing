@@ -35,8 +35,7 @@ class Organizer
 			mkdir temp_path + "answers/", "html"
 			mkdir temp_path + "answers/", "pdf"
 			
-			cp "../templates/questions.css", temp_path + "questions/html/"
-			cp "../templates/answers.css", temp_path + "answers/html/"
+			#cp "../templates/questions.css", temp_path + "questions/html/"
 			
 			i = i + 1
 		end

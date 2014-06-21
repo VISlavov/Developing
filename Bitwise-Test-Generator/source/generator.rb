@@ -2,7 +2,7 @@ require 'securerandom'
 
 class Generator
 
-	def initialize level, path, c_parser
+	def initialize level, path, c_parser, pdf_parser
 		@@level = level
 		@@orig = generate_hex(4).to_s(16).upcase()
 		@@orig = ensure_length @@orig, 4 * @@level
@@ -10,7 +10,10 @@ class Generator
 		@@insert = generate_hex(4).to_s(16).upcase()
 		@@insert = ensure_length @@insert, 4 * @@level
 		@@insert = prepend_hex_id @@insert, 4
+		
 		@@c_parser = c_parser
+		@@pdf_parser = pdf_parser
+		
 		@@path = path
 		
 		@@rand_8_hex = ensure_length(generate_hex(8).to_s(16).upcase, 4 * @@level)
@@ -114,8 +117,9 @@ class Generator
 		program_body << 'printf("%d", result)'
 	end
 	
-	def generate_all count
+	def generate_all count, html_parser
 		i = 0
+		html_parser.add_style("questions")
 		
 		while i < count
 			number = i.to_s + "/questions/c/"
@@ -132,6 +136,8 @@ class Generator
 			@@c_parser.fill_file generate_type9, @@path + number + "10.c"
 			@@c_parser.fill_file generate_type10("^"), @@path + number + "11.c"
 			@@c_parser.fill_file generate_type10("|"), @@path + number + "12.c"
+			
+			#remove_array_part array, indexes
 			
 			i = i + 1
 		end

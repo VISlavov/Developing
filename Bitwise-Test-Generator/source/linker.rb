@@ -19,16 +19,17 @@ path = ensure_correct_path ARGV[2]
 
 organizer = Organizer.new
 c_parser = C_parser.new(organizer)
+pdf_parser = Pdf_parser.new()
 
 organizer.rm_dir(path + "tests")
 organizer.mkdir path, "tests"
 
 organizer.setup_base_folders path += "tests/", count
 
-generator = Generator.new(level, path, c_parser)
-generator.generate_all count
-
+generator = Generator.new(level, path, c_parser, pdf_parser)
 html_parser = Html_parser.new(organizer, generator)
-pdf_parser = Pdf_parser.new()
+
+generator.generate_all count, html_parser
+
 runner = C_runner.new(path, count, generator, html_parser, organizer, pdf_parser)
 runner.create_makefile_and_compile()
