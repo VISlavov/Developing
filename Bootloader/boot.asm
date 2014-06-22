@@ -7,8 +7,8 @@ jmp main ;Jump to start main() entry-point
 ; Variables 
 ;;;;;;;;;;;;;;
 
-Message db "Hello World, booting from low-level 16-bit...", 0x0 
-MessageB db "Fisnik's own bootloader program written in x86 assembly language.", 0x0
+Message db "Hello, booting from low-level 16-bit...", 0x0 
+MessageB db "bootloader program written in x86 assembly language.", 0x0
 AnyKey db "Press any key to reboot...", 0x0 
 
 ;Print characters to the screen 
