@@ -1,7 +1,12 @@
 Requirements:
 	- ruby version 2.1.0
+	- rubygems
 	- gem pdfkit
 	- gem wkhtmltopdf
+	
+	Maybe you can run it with older version of ruby if you have:
+	- library 'fileutils'
+	- library 'securerandom'
 
 Template:
 	cd source
