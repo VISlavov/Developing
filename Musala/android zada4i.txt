@@ -1,0 +1,47 @@
+
+Activity 1:
+
+Da se narpavi activity v koeto popylvame v edin poleta ime i parola: 
+v lqvata 4ast na ekrana ima label koito podskazva kakvo trqbva da popylni usera vyv edit poleto koeto se namira do label-a.
+parolata ne se vijda kato se popylva( izlizat zvezdi4ki na mqstoto na bukvite);
+
+v dolnata 4ast na ekrana ima buton " prodylji" koito stava aktiven sled kato sa popylneni dvete poleta. 
+
+
+Pri natiskane na butona se otiva na vtoroto aktivity.
+
+Activity 2:
+Activity kydeto se popylva adress i telefon na potrebitelq. 
+
+sled kato popylni vsi4ki poleta moje da natisne butona v dolnata 4ast na ekrana za da otide na tretoto aktivity.
+
+Activity 3:
+Activity kydeto usera si pravi pory4kata: 
+V nai gornata 4ast izbira ot dropdown menu predqstie ( edno ot nqkolko vyzmojni).
+pod nego ima izbor za osnovno qstie kato se selectira  4rez radio buton.
+pod nego ima izbor na dobavki , kydeto trqbva da moje da se selektirat nqkolko 4rez checkbox.
+otdolu imame vyzmojnost da zakupim koka kola  , koli`estvoto izbirame sys slider  ot 0 do 2 litra.
+vsqko ne6to koeto pory4vame si ima cena i  v dolnata 4ast na ekrana izpisva kakva e cenata na izbranite qstiq  do momenta.
+iskam izbora na dobavki da se namira na to4no 6/10 ti ot viso4inata na ekrana ( ako e 100 piksela da e mejdu 60 i 70  pikseli ) . tova 6te go testvam na razli4ni telefoni.
+
+
+kogato usera priklu4i s izbiraneto hrana cyka vyrhu buton "pory4ai" i e prepraten kym novo activity koeto izpsiva 
+imeto , adresa , telefona i pory4kata koito sa bili popylneni predi tova.
+
+Iskam sled vsqko aktivity Marto da pogeljda koda i da pravi code review , kato Viktor da vzima  predvid syvetite za pisane na kod kogato pi6e sledva6toto aktivity.
+
+Iskam prilojenieto da e user friendly i da se vijda dobre , kgoato se zavyrti ekrana sy6to.
+Iskam da ima proverki na poletata ( primerno telefona da ne moje da e bukvi).
+da sa realni vyzmojnostite za izbor ( da ne moje da si pory4am 345ml koka kola).
+
+
+
+
+
+
+Kato se zavyrti telefona nastrani , da se zapazvat vyvedenite poleta , 
+kakto i pri vry6tane nazad po aktivitytata da se pazi informaciqta popylnena do momenta.
+
+
+Sled kato se napravi zada4ata da se realizira sys tabove , vmesto otdelni aktivitita.
+
