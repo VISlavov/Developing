@@ -74,6 +74,8 @@ module CreateGui
 		modal.add TextField.new("S - down", :x=>20, :y=>100, :padding_left=>10, :padding_top=>10, :relative=>true)
 		modal.add TextField.new("A - left", :x=>20, :y=>130, :padding_left=>10, :padding_top=>10, :relative=>true)
 		modal.add TextField.new("D - right", :x=>20, :y=>160, :padding_left=>10, :padding_top=>10, :relative=>true)
+
+		modal.add TextField.new("ESC - menu", :x=>170, :y=>70, :padding_left=>10, :padding_top=>10, :relative=>true)
 		
 		ok_butt = Button.new("OK", :x=>180, :y=>180, :padding_left=>20, :padding_top=>20,:relative=>true)
 		ok_butt.on :pressed do |*opts|
