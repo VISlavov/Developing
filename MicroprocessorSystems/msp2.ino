@@ -1,13 +1,15 @@
 const int button = PUSH2;
 
 int isButtonPressed = 0;
-int timesToLightUp = 1000;
+int timesToLightUp = -1;
 int isFinished = 0;
   
 void setup() {
   pinMode(button, INPUT_PULLUP);
   pinMode(GREEN_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
+  
+  Serial.begin(4800);
   
   digitalWrite(GREEN_LED, LOW);
   digitalWrite(RED_LED, LOW);
@@ -33,8 +35,6 @@ void stageOne() {
     delay(1);
   }
   
-  timesToLightUp -= 820;
-  
   while(timesToLightUp > 0) {
     digitalWrite(led, HIGH);
     delay(500);
@@ -47,8 +47,19 @@ void stageOne() {
 }
 
 void mainProcess() {
-   if(timesToLightUp >= 820 && timesToLightUp <= 840) {
-     timesToLightUp -= 320;  
+	while(true) {
+		if(Serial.available() > 0) {
+			timesToLightUp = Serial.read();
+			
+			digitalWrite(GREEN_LED, HIGH);
+			delay(5000);
+			digitalWrite(GREEN_LED, LOW);
+
+			break;
+		}
+	}
+	
+   if(timesToLightUp != -1) {
     int buttonState = digitalRead(button);
     
     if(isButtonPressed) {
@@ -59,14 +70,6 @@ void mainProcess() {
     
     if (buttonState == LOW) {
       isButtonPressed = 1;
-    }
-  } else {
-    timesToLightUp = analogRead(A5);
-    
-    if(timesToLightUp >= 820 && timesToLightUp <= 840) {
-      digitalWrite(GREEN_LED, HIGH);
-      delay(5000);
-      digitalWrite(GREEN_LED, LOW);
     }
   }
 }
