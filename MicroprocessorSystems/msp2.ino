@@ -47,19 +47,19 @@ void stageOne() {
 }
 
 void mainProcess() {
-	while(true) {
-		if(Serial.available() > 0) {
-			timesToLightUp = Serial.read();
-			
-			digitalWrite(GREEN_LED, HIGH);
-			delay(5000);
-			digitalWrite(GREEN_LED, LOW);
+	if(timesToLightUp == -1) {
+		while(true) {
+			if(Serial.available() > 0) {
+				timesToLightUp = Serial.read();
+				
+				digitalWrite(GREEN_LED, HIGH);
+				delay(5000);
+				digitalWrite(GREEN_LED, LOW);
 
-			break;
+				break;
+			}
 		}
-	}
-	
-   if(timesToLightUp != -1) {
+	} else {
     int buttonState = digitalRead(button);
     
     if(isButtonPressed) {
