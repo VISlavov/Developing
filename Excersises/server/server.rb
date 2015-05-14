@@ -1,122 +1,120 @@
 require './multiclienttcpserver.rb'
+require './request.rb'
 
 class Server
 	
+	@@STATUS_CODES = {
+		:success => 200,
+		:not_found => 404,
+		:bad_request => 400,
+	}
+
 	def initialize
-		@REQUEST_TYPES = {
-			:get => 'GET',
-			:post => 'POST',
-		}
 	end
 
-	def get_content_type(path)
-		  ext = File.extname(path)
-		  return "text/html"  if ext == ".html" or ext == ".htm"
-		  return "text/plain" if ext == ".txt"
-		  return "text/css"   if ext == ".css"
-		  return "image/jpeg" if ext == ".jpeg" or ext == ".jpg"
-		  return "image/gif"  if ext == ".gif"
-		  return "image/bmp"  if ext == ".bmp"
-		  return "text/plain" if ext == ".rb"
-		  return "text/xml"   if ext == ".xml"
-		  return "text/xml"   if ext == ".xsl"
-		  return "text/html"
+	def bad_request400 session
+		session.print "HTTP/1.1 #{@@STATUS_CODES[:bad_request]}/ Bad Request\r\nServer Vicky\r\n\r\n"
+		session.print "#{@@STATUS_CODES[:bad_request]} - Bad Request."
+	end
+
+	def not_found404 session
+		session.print "HTTP/1.1 #{@@STATUS_CODES[:not_found]}/ Object Not Found\r\nServer Vicky\r\n\r\n"
+		session.print "#{@@STATUS_CODES[:not_found]} - Resource cannot be found."
+	end
+
+	def success200 resource, session, is_file
+		if is_file
+			content_type = resource.get_content_type()
+		else
+			content_type = Resource.CONTENT_TYPES[:plain]
+		end
+		
+		session.print "HTTP/1.1 #{@@STATUS_CODES[:success]}/OK\r\nServer: Vicky\r\nContent-method: #{content_type}\r\n\r\n"
 	end
 	
-	def get_request_method request
-		method = request.split(" ")[0]
-		
-		method	
-	end	
+	def send resource, session, is_file
+		success200(resource, session, is_file)
 
-	def is_get request
-		method = get_request_method request
-		
-		if method == @REQUEST_TYPES[:get]
-			is_get = true
+		if is_file
+			resource_path = resource.get_extended_path()
+
+			File.open(resource_path, "rb") do |f|
+				while (!f.eof?) do
+					buffer = f.read(256)
+					session.write(buffer)
+				end
+			end
 		else
-			is_get = false
-		end	
-		
-		is_get
+			session.write(resource)
+		end
 	end
 
-	def get_resource resource, session
-		contentType = get_content_type(resource)
-		session.print "HTTP/1.1 200/OK\r\nServer: Vicky\r\nContent-method: #{contentType}\r\n\r\n"
+	def receive resource, session, request
+		resource_path = resource.get_extended_path
 
-		File.open(resource, "rb") do |f|
-			while (!f.eof?) do
-				buffer = f.read(256)
-				session.write(buffer)
+		File.open(resource_path, 'w') do |f|
+			f << request.body 
+		end
+
+		success200(resource, session, true)
+	end
+
+	def handle_execution resource, session, request
+		resource_path = resource.get_extended_path()
+		method = request.get_request_method() 
+
+		result = `ruby #{resource_path} #{method}`
+		send(result, session, false)
+	end
+
+	def handle_get resource, session
+		send(resource, session, true)
+	end
+
+	def handle_post resource, session, request
+		receive(resource, session, request)
+	end
+
+	def status resource, is_script, is_get
+		status_code = @@STATUS_CODES[:success]
+		
+		if resource.is_empty() 
+			status_code = @@STATUS_CODES[:bad_request]
+		elsif resource.is_directory()
+			status_code =	@@STATUS_CODES[:bad_request]
+		else
+			if is_script || is_get
+				if !resource.is_existing()
+					status_code = @@STATUS_CODES[:not_found]
+				end
 			end
 		end
-	end
 
-	def get_headers session
-		headers = {}
-
-		#get the first heading (first line)
-		headers['Heading'] = session.gets.gsub /^"|"$/, ''.chomp
-		method = headers['Heading'].split(' ')[0]
-
-		#parse the header
-		while true
-				#do inspect to get the escape characters as literals
-				#also remove quotes
-				line = session.gets.inspect.gsub /^"|"$/, ''
-
-				#if the line only contains a newline, then the body is about to start
-				break if line.eql? '\r\n'
-
-				label = line[0..line.index(':')-1]
-
-				#get rid of the escape characters
-				val = line[line.index(':')+1..line.length].tap{|val|val.slice!('\r\n')}.strip
-				headers[label] = val
-		end 
-
-		headers
-	end
-
-	def get_body session, headers
-		content_length = headers['Content-Length'].to_i
-		body = session.read(content_length) 
-
-		body
-	end
-
-	def handle_get request, session
-		resource = request.gsub(/GET\ \//, '').gsub(/\ HTTP.*/, '').chomp
-
-		if !File.exists?(resource)
-			session.print "HTTP/1.1 404/Object Not Found\r\nServer Vicky\r\n\r\n"
-			session.print "404 - Resource cannot be found."
-		else
-			if !File.directory?(resource)
-				get_resource resource, session
-			end
-		end
-	end
-
-	def handle_post request, session
-		resource = request.gsub(/POST\ \//, '').gsub(/\ HTTP.*/, '').chomp
-		headers = get_headers(session)
-		body = get_body(session, headers)
-		
-		File.open(resource, 'w') do |f|
-			f << body 
-		end
+		status_code
 	end
 
 	def handle_session session
-		request = session.gets
-		puts request
-		
-		if is_get(request)
-			handle_get request, session
-		else
-			handle_post request, session		
+		request = Request.new(session)
+		resource = request.resource
+		is_get = request.is_get()
+		is_script = resource.is_script()
+		status  = status(resource, is_script, is_get)
+
+		case status
+			when @@STATUS_CODES[:not_found]
+				not_found404(session)
+			when @@STATUS_CODES[:bad_request]
+				bad_request400(session)
+			else
+				if is_script 
+					handle_execution(resource, session, request)
+				else
+					if is_get
+						handle_get(resource, session)
+					else
+						handle_post(resource, session, request)
+					end
+				end
 		end
 
 		session.close
@@ -131,6 +129,10 @@ class Server
 				handle_session session
 			end
 		end
+	end
+
+	def self.STATUS_CODES
+		@@STATUS_CODES
 	end
 
 end
