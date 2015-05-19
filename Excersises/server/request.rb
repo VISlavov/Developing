@@ -47,18 +47,18 @@ class Request
 
 		#parse the header
 		while true
-				#do inspect to get the escape characters as literals
-				#also remove quotes
-				line = @session.gets.inspect.gsub /^"|"$/, ''
+			#do inspect to get the escape characters as literals
+			#also remove quotes
+			line = @session.gets.inspect.gsub /^"|"$/, ''
 
-				#if the line only contains a newline, then the body is about to start
-				break if line.eql? '\r\n'
+			#if the line only contains a newline, then the body is about to start
+			break if line.eql? '\r\n'
 
-				label = line[0..line.index(':')-1]
+			label = line[0..line.index(':')-1]
 
-				#get rid of the escape characters
-				val = line[line.index(':')+1..line.length].tap{|val|val.slice!('\r\n')}.strip
-				headers[label] = val
+			#get rid of the escape characters
+			val = line[line.index(':')+1..line.length].tap{|val|val.slice!('\r\n')}.strip
+			headers[label] = val
 		end 
 
 		headers

@@ -1,25 +1,51 @@
+require 'timeout'
+
 require './multiclienttcpserver.rb'
 require './request.rb'
 
 class Server
 	
+	@@SCRIPT_TIMEOUT = 5
+	
+	@@WORK_MECHANISMS = {
+		:threads => 'threads',
+		:forking => 'forking',
+		:async => 'async',
+	}
+	
 	@@STATUS_CODES = {
 		:success => 200,
 		:not_found => 404,
 		:bad_request => 400,
+		:service_unavailable => 503,
 	}
 
-	def initialize
+	def initialize timeout = @@SCRIPT_TIMEOUT
+		@@SCRIPT_TIMEOUT = timeout.to_i
 	end
 
 	def bad_request400 session
-		session.print "HTTP/1.1 #{@@STATUS_CODES[:bad_request]}/ Bad Request\r\nServer Vicky\r\n\r\n"
-		session.print "#{@@STATUS_CODES[:bad_request]} - Bad Request."
+		message = "HTTP/1.1 #{@@STATUS_CODES[:bad_request]}/ Bad Request\r\nServer Vicky\r\n\r\n"
+		print_to_session(session, message)
+
+		message = "#{@@STATUS_CODES[:bad_request]} - Bad Request."
+		print_to_session(session, message)
 	end
 
 	def not_found404 session
-		session.print "HTTP/1.1 #{@@STATUS_CODES[:not_found]}/ Object Not Found\r\nServer Vicky\r\n\r\n"
-		session.print "#{@@STATUS_CODES[:not_found]} - Resource cannot be found."
+		message = "HTTP/1.1 #{@@STATUS_CODES[:not_found]}/ Object Not Found\r\nServer Vicky\r\n\r\n"
+		print_to_session(session, message)
+
+		message = "#{@@STATUS_CODES[:not_found]} - Resource cannot be found."
+		print_to_session(session, message)
+	end
+
+	def service_unavailable503 session, extra_message = "This service is unavailable right now."
+		message = "HTTP/1.1 #{@@STATUS_CODES[:service_unavailable]}/ Service Unavailable\r\nServer Vicky\r\n\r\n"
+		print_to_session(session, message)
+
+		message = "#{@@STATUS_CODES[:service_unavailable]} - " + extra_message
+		print_to_session(session, message)
 	end
 
 	def success200 resource, session, is_file
@@ -28,8 +54,25 @@ class Server
 		else
 			content_type = Resource.CONTENT_TYPES[:plain]
 		end
-		
-		session.print "HTTP/1.1 #{@@STATUS_CODES[:success]}/OK\r\nServer: Vicky\r\nContent-method: #{content_type}\r\n\r\n"
+
+		message = "HTTP/1.1 #{@@STATUS_CODES[:success]}/OK\r\nServer: Vicky\r\nContent-method: #{content_type}\r\n\r\n"
+		print_to_session(session, message)
+	end
+
+	def write_to_session session, buffer
+		begin
+			session.write(buffer)
+		rescue Errno::EPIPE
+			-1			
+		end
+	end
+
+	def print_to_session session, data
+		begin
+			session.print(data)
+		rescue Errno::EPIPE
+			-1			
+		end
 	end
 	
 	def send resource, session, is_file
@@ -41,11 +84,11 @@ class Server
 			File.open(resource_path, "rb") do |f|
 				while (!f.eof?) do
 					buffer = f.read(256)
-					session.write(buffer)
+					write_to_session(session, buffer)
 				end
 			end
 		else
-			session.write(resource)
+			write_to_session(session, resource)
 		end
 	end
 
@@ -62,9 +105,18 @@ class Server
 	def handle_execution resource, session, request
 		resource_path = resource.get_extended_path()
 		method = request.get_request_method() 
+		result = ''
 
-		result = `ruby #{resource_path} #{method}`
-		send(result, session, false)
+		begin
+			Timeout::timeout(@@SCRIPT_TIMEOUT) do	
+				result = `ruby #{resource_path} #{method}`
+			end
+			
+			send(result, session, false)
+		rescue Timeout::Error
+			message = "Script execution failed to fit in the specified time - #{@@SCRIPT_TIMEOUT} sec."
+			service_unavailable503(session, message)
+		end
 	end
 
 	def handle_get resource, session
@@ -120,14 +172,62 @@ class Server
 		session.close
 	end
 
-	def start port
+	def handle_session_async session
+		handle_session session
+	end
+
+	def join_finished_threads
+		Thread.list.each do |t|
+			if(t != Thread.current && t.status == "sleep")
+				t.join
+			end
+		end
+	end
+
+	def handle_session_with_threads session
+		join_finished_threads()
+
+		Thread.new do
+			handle_session session
+		end
+	end
+
+	def handle_session_with_forking session
+		pid = Process.fork do
+			handle_session session
+		end
+
+		Process.detach(pid)
+		session.close()
+	end
+
+	def handle_invalid_work_mechanism work_mechanism
+		puts "Invalid work mechanism selected - '#{work_mechanism}'"
+		puts "Available work mechanisms: #{@@WORK_MECHANISMS}"
+		exit
+	end
+
+	def choose_work_mechanism webserver, work_mechanism
+		if (session = webserver.get_socket)
+			case work_mechanism
+				when @@WORK_MECHANISMS[:async]
+					handle_session_async(session)
+				when @@WORK_MECHANISMS[:threads]
+					handle_session_with_threads(session)
+				when @@WORK_MECHANISMS[:forking]
+					handle_session_with_forking(session)
+				else
+					handle_invalid_work_mechanism(work_mechanism)
+			end
+		end
+	end
+
+	def start port, work_mechanism
 		webserver = MulticlientTCPServer.new(port, 1, true)
 		puts "Server listening on port #{port} ..."
 		
 		loop do
-			if (session = webserver.get_socket)
-				handle_session session
-			end
+			choose_work_mechanism(webserver, work_mechanism)
 		end
 	end
 
