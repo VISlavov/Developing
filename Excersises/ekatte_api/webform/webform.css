@@ -1,0 +1,24 @@
+*
+{
+	margin: 0;
+	padding: 0;
+}
+
+#main-wrapper
+{
+	width: 320px;
+	margin: 0 auto;
+	padding: 5%;
+	font-family: "Goudy Bookletter 1911", sans-serif;
+}
+
+#main-wrapper > h2
+{
+	margin-bottom: 15px;
+}
+
+#results
+{
+	margin-top: 15px;
+	font-size: 11px;
+}

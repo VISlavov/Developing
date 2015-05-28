@@ -55,7 +55,14 @@ class Server
 			content_type = Resource.CONTENT_TYPES[:plain]
 		end
 
-		message = "HTTP/1.1 #{@@STATUS_CODES[:success]}/OK\r\nServer: Vicky\r\nContent-method: #{content_type}\r\n\r\n"
+		status_code = "HTTP/1.1 #{@@STATUS_CODES[:success]}/OK"
+		server = "Server: Vicky"
+		content_method = "Content-method: #{content_type}"
+		allow_headers = "Access-Control-Allow-Headers: accept, content-type"
+		allow_methods = "Access-Control-Allow-Methods: POST, GET"
+		allow_origin = "Access-Control-Allow-Origin: *"
+
+		message = "#{status_code}\r\n#{server}\r\n#{content_method}\r\n#{allow_headers}\r\n#{allow_origin}\r\n#{allow_methods}\r\n\r\n"
 		print_to_session(session, message)
 	end
 
@@ -104,12 +111,14 @@ class Server
 
 	def handle_execution resource, session, request
 		resource_path = resource.get_extended_path()
-		method = request.get_request_method() 
+		arguments = request.get_formatted_arguments()
 		result = ''
+
+		print arguments
 
 		begin
 			Timeout::timeout(@@SCRIPT_TIMEOUT) do	
-				result = `ruby #{resource_path} #{method}`
+				result = `ruby #{resource_path} #{arguments}`
 			end
 			
 			send(result, session, false)

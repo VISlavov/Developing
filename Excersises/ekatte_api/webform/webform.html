@@ -1,0 +1,27 @@
+<html>
+	<head>
+		<meta charset="UTF8"> </meta>
+
+		<link href='webform.css' rel='stylesheet' type='text/css'> </link>
+
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"> </script>
+		<script type="text/javascript" src="vendor/q/q.js"> </script>
+		<script type="text/javascript" src="vendor/jquery.form.min.js"> </script>
+	</head>
+
+	<body>
+		<div id='main-wrapper'>
+			<h2> Search for a place: </h2>
+
+			<form id="search-form" method="get" action="http://localhost:8000/outercalls/mediator.rb">
+				<input id="keyword" type="text"> </input>
+				<input type="submit" value="Search"> </input>
+			</form>	
+
+			<pre id="results">
+			</pre>
+		</div>
+
+		<script type="text/javascript" src="webform.js"></script>
+	</body>
+</html>

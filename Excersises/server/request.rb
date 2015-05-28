@@ -1,8 +1,12 @@
 require './resource.rb'
+require 'cgi'
 
 class Request
 
-	attr_accessor :resource, :body
+	attr_accessor :resource, :body, :arguments
+
+	@@ARGUMENTS_SEPARATOR = '&'
+	@@ARGUMENTS_INDICATOR = '?'
 
 	def initialize session
 		@REQUEST_TYPES = {
@@ -10,6 +14,7 @@ class Request
 			:post => 'POST',
 		}
 
+		@arguments = {}
 		@session = session
 		@request = ''
 		set_request session
@@ -72,9 +77,57 @@ class Request
 	end
 
 	def set_request session
-		@request = session.gets
-		
+		request = session.gets
+
+		if request.include? @@ARGUMENTS_INDICATOR
+			request = request.split('?')
+			arguments = request[1].split(' ')
+
+			request = "#{request[0]}  #{arguments[1]}"
+			arguments = arguments[0]
+
+			set_arguments(arguments)
+		end	
+
+		@request = request
 		puts @request
+	end
+
+	def set_arguments arguments
+		if arguments.include? @@ARGUMENTS_SEPARATOR
+			arguments = arguments.split(@@ARGUMENTS_SEPARATOR)
+		else
+			arguments = [arguments]
+		end
+		
+		arguments.each do |arg|
+			if arg.eql? 'method'
+				arg = "#{arg}=#{get_request_method()}"
+			end
+
+			if arg.include? '='
+				arg = arg.split('=')
+
+				key = arg[0]
+				value = arg[1]
+
+				@arguments[key] = value
+			end
+		end
+	end
+
+	def get_formatted_arguments arguments = @arguments
+		formatted_arugments = ''
+		
+		arguments.each do |arg|
+			if formatted_arugments != ''
+				formatted_arugments += ' '
+			end
+
+			formatted_arugments += CGI::unescape(arg[1]).gsub(' ', '_').gsub('"', '!')
+		end
+
+		formatted_arugments
 	end
 
 	def set_session session
