@@ -1,4 +1,5 @@
 require 'timeout'
+require 'eventmachine'
 
 require './multiclienttcpserver.rb'
 require './request.rb'
@@ -181,8 +182,16 @@ class Server
 		session.close
 	end
 
-	def handle_session_async session
-		handle_session session
+	def handle_session_async webserver
+		EventMachine.run do
+			loop do
+				if (session = webserver.get_socket)
+					EM.defer do
+						handle_session(session)
+					end
+				end
+			end
+		end
 	end
 
 	def join_finished_threads
@@ -197,13 +206,13 @@ class Server
 		join_finished_threads()
 
 		Thread.new do
-			handle_session session
+			handle_session(session)
 		end
 	end
 
 	def handle_session_with_forking session
 		pid = Process.fork do
-			handle_session session
+			handle_session(session)
 		end
 
 		Process.detach(pid)
@@ -219,14 +228,12 @@ class Server
 	def choose_work_mechanism webserver, work_mechanism
 		if (session = webserver.get_socket)
 			case work_mechanism
-				when @@WORK_MECHANISMS[:async]
-					handle_session_async(session)
 				when @@WORK_MECHANISMS[:threads]
 					handle_session_with_threads(session)
 				when @@WORK_MECHANISMS[:forking]
 					handle_session_with_forking(session)
 				else
-					handle_invalid_work_mechanism(work_mechanism)
+					handle_session(session)
 			end
 		end
 	end
@@ -235,8 +242,12 @@ class Server
 		webserver = MulticlientTCPServer.new(port, 1, true)
 		puts "Server listening on port #{port} ..."
 		
-		loop do
-			choose_work_mechanism(webserver, work_mechanism)
+		if work_mechanism == @@WORK_MECHANISMS[:async]
+			handle_session_async(webserver)
+		else
+			loop do
+				choose_work_mechanism(webserver, work_mechanism)
+			end
 		end
 	end
 
