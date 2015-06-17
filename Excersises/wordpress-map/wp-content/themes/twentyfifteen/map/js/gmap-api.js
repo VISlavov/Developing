@@ -2,14 +2,8 @@ function initMap(weatherData) {
 	var map,
 		z = 9,
 		i = 0,
-		stations = getWeatherStations(weatherData);
+		stations = weatherData;
 
-	function getWeatherStations(data) {
-		var stations = data.list;
-
-		return stations;
-	}
-			
 	function hideFromBugger() {
 		if(i == 0) {
 			$('#prev').hide();
@@ -40,13 +34,13 @@ function initMap(weatherData) {
 	}
 
 	function getPosForStation(i) {
-		var pos = new google.maps.LatLng(stations[i].coord.lat, stations[i].coord.lon);
+		var pos = new google.maps.LatLng(stations[i].lat, stations[i].lon);
 
 		return pos;
 	}
 
 	function getLabelForStation(i) {
-		var label = stations[i].name + " / " + "temperature: " + stations[i].main.temp;
+		var label = stations[i].name + " / " + "temperature: " + stations[i].temperature;
 
 		return label;
 	}

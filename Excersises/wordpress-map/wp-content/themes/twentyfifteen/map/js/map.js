@@ -1,4 +1,4 @@
-getWeatherData();
+//getWeatherData();
 
 $(document).ready(function () {
 	$('.loader').hide();
