@@ -1,0 +1,1 @@
+#*/4 * * * * rhino -opt -1 < /home/vicky/Dropbox/what-the/Dev/Excersises/wordpress-map/wp-content/themes/twentyfifteen/map/js/rhino/rhino-jobs &

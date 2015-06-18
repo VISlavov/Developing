@@ -16,7 +16,6 @@
 		<link rel="stylesheet" type="text/css" href="/wp-content/themes/twentyfifteen/map/css/map.css">
 	</head>
 	<body>
-
 		<button id="prev">Prev</button>
 		<button id="next">Next</button>
 		<select></select>

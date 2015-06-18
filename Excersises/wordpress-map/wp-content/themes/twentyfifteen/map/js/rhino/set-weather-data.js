@@ -32,29 +32,13 @@ var wphost = 'http://127.0.0.1:8088',
 	clearInterval = clearTimeout;
 })();
 
-/*setTimeout(function () {
-	setWPHeaders();
-}, 1000);
-*/
+setWPHeaders();
 
 function setWPHeaders() {
-	$.ajax({
-		url: wphost,
-	})
-	.done(function (data) {
-		var $doc = $.parseHTML(data),
-			cookieHolder = $('#cookie-holder', $doc),
-			cookie = cookieHolder.attr('data-cookie');
+	var cookie = readFile('cookie');
 
-		console.log(data);
-		console.log(cookie);
-
-		$.ajaxSetup({
-			headers: { 'Cookie':  cookie},
-		});
-	})
-	.fail(function (err) {
-		console.log('cookie request fail');
+	$.ajaxSetup({
+		headers: { 'Cookie':  cookie},
 	});
 }
 
@@ -65,7 +49,7 @@ function setWeatherData() {
 		},
 		lowerBoundary  = {
 			lat: "-81",
-			lon: "-40",
+			lon: "30",
 		},
 		weatherMapZoom = 15,
 		weatherAPIKey = "711891b85effcf99e344ade54a7eedb7",
@@ -167,19 +151,6 @@ function listWeatherTable() {
 	return deferred.promise;
 }
 
-function lsT() {
-	listWeatherTable()
-		.then(function (data) {
-			console.log(data);
-			for(key in data) {
-				console.log(key + ' ' + data[key]);
-			}
-		})
-		.fail(function () {
-			console.log('fail');
-		});
-}
-
 function deleteWeatherTableRecord(data) {
 	var url = wphost + "/wp-admin/admin.php?page=simple_table_manager_edit",
 		id = data.id,
@@ -211,7 +182,7 @@ function deleteWeatherTableRecord(data) {
 }
 
 function deleteWeatherData() {
-	listWeatherTable()
+	return listWeatherTable()
 		.then(function (data) {
 			$(data).each(function () {
 				deleteWeatherTableRecord(this);
@@ -242,17 +213,19 @@ function addWeatherTableRow(name, temperature, humidity, pressure, lat, lon) {
 }
 
 function addAllWeatherDataToDb(weatherData) {
-	deleteWeatherData();
-	var result;
+	deleteWeatherData()
+		.then(function () {
+			var result;
 
-	for(var i = 0; i < weatherData.list.length; i++) {
-		result = weatherData.list[i];	
-		addWeatherTableRow(
-			result.name,
-			result.main.temp,
-			result.main.humidity,
-			result.main.pressure,
-			result.coord.lat,
-			result.coord.lon);
-	}
+			for(var i = 0; i < weatherData.list.length; i++) {
+				result = weatherData.list[i];	
+				addWeatherTableRow(
+					result.name,
+					result.main.temp,
+					result.main.humidity,
+					result.main.pressure,
+					result.coord.lat,
+					result.coord.lon);
+			}
+		});
 }

@@ -31,3 +31,8 @@ function populateSelectOptions(select, options, attribute, clearCurrent) {
 		addOptionToSelect(select, option);
 	}
 }
+
+function cookieRefreshRequest() {
+	$.ajax('/wp-admin/admin.php?page=simple_table_manager_list');
+}
+

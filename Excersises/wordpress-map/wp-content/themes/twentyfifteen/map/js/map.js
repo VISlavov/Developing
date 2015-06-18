@@ -1,4 +1,4 @@
-//getWeatherData();
+getWeatherData();
 
 $(document).ready(function () {
 	$('.loader').hide();
@@ -11,3 +11,5 @@ $(document).ajaxStart(function () {
 $(document).ajaxComplete(function () {
 	$(".loader").hide();
 });
+
+cookieRefreshRequest();

@@ -3,4 +3,4 @@ load('/home/vicky/Dropbox/what-the/Dev/Excersises/wordpress-map/wp-content/theme
 load('/home/vicky/Dropbox/what-the/Dev/Excersises/wordpress-map/wp-content/themes/twentyfifteen/map/js/vendor/q/q.js');
 load('/home/vicky/Dropbox/what-the/Dev/Excersises/wordpress-map/wp-content/themes/twentyfifteen/map/js/rhino/set-weather-data.js');
 $.support.cors = true;
-setWeatherData();
+deleteWeatherData();
