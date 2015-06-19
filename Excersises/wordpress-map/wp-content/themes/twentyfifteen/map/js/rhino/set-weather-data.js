@@ -69,8 +69,6 @@ function getRowContentsSpecifiers(table) {
 }
 
 function parseWeatherTableHtml(data) {
-	console.log('parsing meta cells');
-
 	var $doc = $.parseHTML(data),
 		table = $('table', $doc),
 		rowSpec = getRowContentsSpecifiers(table),
@@ -79,12 +77,8 @@ function parseWeatherTableHtml(data) {
 		rowIndex = 0,
 		rowData = {};
 	
-	console.log('parsing meta cells');
-
 	table = deleteWeatherTableMetaCells(table);
 
-	console.log('parsed meta cells');
-	
 	table.find('tr').each(function(){
 		$(this).find('td').each(function(){
 			rowData[rowSpec[headingIndex]] = $(this).text();	
@@ -96,8 +90,6 @@ function parseWeatherTableHtml(data) {
 		headingIndex = 0
 		rowData = {};
 	});
-
-	console.log('parsed table');
 
 	return jsonTable;	
 }
@@ -115,9 +107,7 @@ function listWeatherTable() {
 		}
 	})
 	.done(function (data) {
-		console.log('got list');
 		jsonTable = parseWeatherTableHtml(data);
-		console.log('parsed');
 		deferred.resolve(jsonTable);
 	})
 	.fail(function (data) {
@@ -161,9 +151,7 @@ function deleteWeatherTableRecord(data) {
 function deleteWeatherData() {
 	return listWeatherTable()
 		.then(function (data) {
-			console.log('listed');
 			$(data).each(function () {
-				console.log('deleting');
 				deleteWeatherTableRecord(this);
 			});
 		});
@@ -192,7 +180,6 @@ function addWeatherTableRow(name, temperature, humidity, pressure, lat, lon) {
 }
 
 function addAllWeatherDataToDb(weatherData) {
-	console.log('got data');
 	deleteWeatherData()
 		.then(function () {
 			var result;
