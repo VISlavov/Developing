@@ -21,6 +21,12 @@
 		<select></select>
 		<div class="loader"></div>
 		<div id="map-canvas"></div>
+		<div id="filters-container">
+			<input id="attribute-filter" type=text placeholder="Enter attribute for selection"> </input>
+			<input id="operator-filter" type=text placeholder="Enter comparison operator"> </input>
+			<input id="value-filter" type=text placeholder="Enter value"> </input>
+			<button id="filter-button"> Filter </button>
+		</div>
 
 		<script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/src/infobox.js"></script>
 		<script type="text/javascript" src="https://raw.githubusercontent.com/andrewplummer/Sugar/master/release/sugar.min.js"> </script>

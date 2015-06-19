@@ -1,36 +1,4 @@
-var wphost = 'http://127.0.0.1:8088',
-	setTimeout,
-	clearTimeout,
-	setInterval,
-	clearInterval;
-
-(function () {
-	var timer = new java.util.Timer();
-	var counter = 1; 
-	var ids = {};
-
-	setTimeout = function (fn,delay) {
-		var id = counter++;
-		ids[id] = new JavaAdapter(java.util.TimerTask,{run: fn});
-		timer.schedule(ids[id],delay);
-		return id;
-	}
-
-	clearTimeout = function (id) {
-		ids[id].cancel();
-		timer.purge();
-		delete ids[id];
-	}
-
-	setInterval = function (fn,delay) {
-		var id = counter++; 
-		ids[id] = new JavaAdapter(java.util.TimerTask,{run: fn});
-		timer.schedule(ids[id],delay,delay);
-		return id;
-	}
-
-	clearInterval = clearTimeout;
-})();
+var wphost = 'http://127.0.0.1:8088';
 
 setWPHeaders();
 
@@ -101,6 +69,8 @@ function getRowContentsSpecifiers(table) {
 }
 
 function parseWeatherTableHtml(data) {
+	console.log('parsing meta cells');
+
 	var $doc = $.parseHTML(data),
 		table = $('table', $doc),
 		rowSpec = getRowContentsSpecifiers(table),
@@ -109,7 +79,11 @@ function parseWeatherTableHtml(data) {
 		rowIndex = 0,
 		rowData = {};
 	
+	console.log('parsing meta cells');
+
 	table = deleteWeatherTableMetaCells(table);
+
+	console.log('parsed meta cells');
 	
 	table.find('tr').each(function(){
 		$(this).find('td').each(function(){
@@ -123,6 +97,7 @@ function parseWeatherTableHtml(data) {
 		rowData = {};
 	});
 
+	console.log('parsed table');
 
 	return jsonTable;	
 }
@@ -140,7 +115,9 @@ function listWeatherTable() {
 		}
 	})
 	.done(function (data) {
+		console.log('got list');
 		jsonTable = parseWeatherTableHtml(data);
+		console.log('parsed');
 		deferred.resolve(jsonTable);
 	})
 	.fail(function (data) {
@@ -184,7 +161,9 @@ function deleteWeatherTableRecord(data) {
 function deleteWeatherData() {
 	return listWeatherTable()
 		.then(function (data) {
+			console.log('listed');
 			$(data).each(function () {
+				console.log('deleting');
 				deleteWeatherTableRecord(this);
 			});
 		});
@@ -213,6 +192,7 @@ function addWeatherTableRow(name, temperature, humidity, pressure, lat, lon) {
 }
 
 function addAllWeatherDataToDb(weatherData) {
+	console.log('got data');
 	deleteWeatherData()
 		.then(function () {
 			var result;

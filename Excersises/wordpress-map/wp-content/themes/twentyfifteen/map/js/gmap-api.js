@@ -1,6 +1,6 @@
 function initMap(weatherData) {
 	var map,
-		z = 9,
+		z = 4,
 		i = 0,
 		stations = weatherData;
 

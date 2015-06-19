@@ -36,3 +36,26 @@ function cookieRefreshRequest() {
 	$.ajax('/wp-admin/admin.php?page=simple_table_manager_list');
 }
 
+function filterData() {
+	var attribute = $('#attribute-filter').val(),
+		operator = $('#operator-filter').val(),
+		value = $('#value-filter').val();
+
+	if(attribute == '' || operator == '' || value == '') {
+		alert('Please fill in all filter fields');
+	} else {
+		var filteredData = [],
+			isMatching;
+		
+		for(key in weatherData) {
+			isMatching = eval(weatherData[key][attribute] + " " + operator + " " + value);
+
+			if(isMatching) {
+				filteredData.push(weatherData[key]);
+			}
+		}
+
+		initWeatherData(filteredData);
+	}
+}
+

@@ -1,3 +1,5 @@
+var weatherData = [];
+
 getWeatherData();
 
 $(document).ready(function () {
@@ -10,6 +12,10 @@ $(document).ajaxStart(function () {
 
 $(document).ajaxComplete(function () {
 	$(".loader").hide();
+});
+
+$('#filter-button').click(function () {
+	filterData();
 });
 
 cookieRefreshRequest();
