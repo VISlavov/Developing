@@ -1,7 +1,3 @@
-var weatherData = [];
-
-getWeatherData();
-
 $(document).ready(function () {
 	$('.loader').hide();
 });
@@ -17,5 +13,3 @@ $(document).ajaxComplete(function () {
 $('#filter-button').click(function () {
 	filterData();
 });
-
-cookieRefreshRequest();

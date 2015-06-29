@@ -32,10 +32,6 @@ function populateSelectOptions(select, options, attribute, clearCurrent) {
 	}
 }
 
-function cookieRefreshRequest() {
-	$.ajax('/wp-admin/admin.php?page=simple_table_manager_list');
-}
-
 function filterData() {
 	var attribute = $('#attribute-filter').val(),
 		operator = $('#operator-filter').val(),
