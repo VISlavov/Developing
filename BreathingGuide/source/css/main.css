@@ -1,0 +1,35 @@
+#sine-canvas
+{
+	width: 100%;
+	height: 50%
+}
+
+#slider-wrapper,
+#slider-label-wrapper
+{
+	margin: 0 auto;
+	width: 320;
+}
+
+#slider-label-wrapper > div
+{
+	text-align: center;
+}
+
+.slider,
+.slider-value-label
+{
+	width: 120;
+}
+
+#slider-left-sin,
+#slider-value-label-left
+{
+	float: left;
+}
+
+#slider-right-sin,
+#slider-value-label-right
+{
+	float: right;
+}
