@@ -43,7 +43,7 @@
 		initialHorizontalOffset = 0;
 		initialLastExtremumPosition = topExtremumBoundary;
 		initialFrequency = rightDemandedFrequency;
-		timeChangeStep = width / 20000;
+		timeChangeStep = width / 10000;
 
 		draw();
 	}
