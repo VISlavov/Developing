@@ -87,16 +87,6 @@
 			isCircleDrawn = drawCircle(isCircleDrawn, i, y);
 
 			context.lineTo(i, y);
-		//	context.stroke();
-		//	alert(freq + ' ' + rightDemandedFrequency);
-			
-			/*if(i/10 % 1 === 0 && t > 50) {
-				console.log(y);
-				console.log(i);
-				console.log(i2);
-				console.log(t);
-				alert('peak');
-			}*/
 			
 			if(isExtremeCrossed(y)) {
 				lastExtremumPosition = 
