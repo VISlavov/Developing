@@ -1,0 +1,13 @@
+<section class='score score-names'>
+<h3> Name: </h3>
+<ul class="scores" ng-repeat="(key, value) in scores | orderObjectBy:'value':true">
+	<li>{{key}}</li>
+</ul>
+</section>
+
+<section class='score points'>
+<h3> Score: </h3>
+<ul class="scores" ng-repeat="(key, value) in scores | orderObjectBy:'value':true">
+	<li>{{value}}</li>
+</ul>
+</section>

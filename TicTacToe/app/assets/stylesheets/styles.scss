@@ -1,0 +1,253 @@
+$names-menu-width: 300px;
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+body {
+    line-height: 1;
+}
+ol, ul {
+    list-style: none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+    content: '';
+    content: none;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/*
+  ========================================
+  Clearfix
+  ========================================
+*/
+
+.clear:before,
+.clear:after {
+  content: "";
+  display: table;
+}
+.clear:after {
+  clear: both;
+}
+.clear {
+  clear: both;
+  *zoom: 1;
+}
+
+/*
+  ========================================
+  Box sizing reset
+  ========================================
+*/
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+/*
+  ========================================
+  Main Content
+  ========================================
+*/
+
+body {
+  color: #666;
+  font-family: Lato, Arial, sans-serif;
+  font-size: 16px;
+}
+
+header {
+  border: 1px solid #ddd;
+  margin: 0 auto 10px;
+  max-width: 640px;
+  padding: 20px;
+}
+header p {
+  display: inline-block;
+  text-align: center;
+}
+header .left-para {
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  width: 64%;
+}
+header .right-para {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 20px 5px;
+  width: 34%;
+}
+header .right-para:hover {
+  border-color: #aaa;
+}
+header .right-para:active {
+  background: #eee;
+}
+
+#fields {
+  background: #fff;
+  border-bottom: 2px solid #bbb;
+  border-left: 2px solid #ddd;
+  border-right: 2px solid #bbb;
+  border-top: 2px solid #ddd;
+  border-radius: 5px;
+  margin: 0 auto;
+  max-width: 360px;
+  width: 100%;
+}
+
+#fields > div {
+  border: 1px solid #ddd;
+  color: transparent;
+  display: inline-block;
+  float: left;
+  font-size: 44px;
+  height: 120px;
+  line-height: 120px;
+  text-align: center;
+  transition: all ease 0.3s;
+  width: 33.333333%;
+}
+#fields > div:hover {
+  border-color: #aaa;
+}
+#fields > div.circle-bg {
+  background: url(/images/circle.png) 50% 50% no-repeat;
+}
+#fields > div.cross-bg {
+  background: url(/images/cross.png) 50% 50% no-repeat;
+}
+
+.circle-cursor {
+  cursor: url('/images/circle.png') 25 25, pointer;
+}
+.cross-cursor {
+  cursor: url('/images/cross.png') 25 25, pointer;
+}
+
+div.other-field {
+  opacity: 0.5;
+}
+
+.standard-button {
+	background: white;
+	outline: none;
+	border: 1px solid #ddd;
+}
+
+.extended-button {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	height: 50px;
+	border-radius:5%;
+}
+
+.hidden {
+	overflow: hidden;
+	visibility: hidden;
+	height: 0;
+	width: 0;
+}
+
+.vertical-list {
+	> li {
+		margin-bottom: 10px;
+	}
+
+	> li:last-child {
+		margin-bottom: 0px;
+	}
+}
+
+.centered {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.names-menu {
+	width: $names-menu-width;
+
+	> li {
+		text-align: center;
+
+		> input {
+			width: $names-menu-width;
+		}
+
+		> input[type='submit'] {
+			@extend .standard-button;
+			@extend .extended-button;
+		}
+	}
+}
+
+input#navigation-button {
+	@extend .standard-button;
+	@extend .extended-button;
+}
+
+ul.scores {
+   list-style: none;
+   margin: 1em 0;
+   padding: 0; 
+
+	li {
+		font-weight: bold;
+		margin: 0;
+		padding: 3px 10px 5px 20px;
+		border-bottom: 1px solid #ccc;
+		color: #666; 
+	}
+
+	li:hover {
+		color: #000;
+		background-color: #ddd; 
+	}
+
+}
+
+section.score {
+	width: 50%;
+}
+
+section.points {
+	float:right;
+}
+
+section.score-names {
+	float:left;
+}
