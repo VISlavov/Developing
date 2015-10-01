@@ -21,23 +21,28 @@ import org.springframework.web.client.RestTemplate;
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0"})
-public class MainControllerIT {
+public class ApplicationIT {
 
     @Value("${local.server.port}")
     private int port;
 
 	private URL base;
 	private RestTemplate template;
+	private String HEALTH_PAGE_PATH = "/health";
 
 	@Before
 	public void setUp() throws Exception {
-		this.base = new URL("http://localhost:" + port + "/");
-		template = new TestRestTemplate();
+		this.base = new URL("http", "localhost", port, "/");
+		this.template = new TestRestTemplate();
 	}
 
 	@Test
-	public void getHello() throws Exception {
-		ResponseEntity<String> response = template.getForEntity(base.toString(), String.class);
-		assertThat(response.getBody(), equalTo("Greetings from Spring Boot!"));
+	public void getMain() throws Exception {
+		ResponseEntity<String> response = template.getForEntity(getHealthUrl().toString(), String.class);
+		assertThat(response.getBody(), equalTo("{\"status\":\"UP\"}"));
+	}
+
+	public URL getHealthUrl() throws Exception {
+		return new URL(base, HEALTH_PAGE_PATH);
 	}
 }

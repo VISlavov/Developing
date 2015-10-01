@@ -5,20 +5,26 @@ import java.util.Arrays;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @SpringBootApplication
+@RestController
 public class Application {
 
-    public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(Application.class, args);
+  @RequestMapping("/resource")
+  public Map<String,Object> home() {
+    Map<String,Object> model = new HashMap<String,Object>();
+    model.put("id", UUID.randomUUID().toString());
+    model.put("content", "Hello World");
+    return model;
+  }
 
-        System.out.println("Let's inspect the beans provided by Spring Boot:");
-
-        String[] beanNames = ctx.getBeanDefinitionNames();
-        Arrays.sort(beanNames);
-        for (String beanName : beanNames) {
-            System.out.println(beanName);
-        }
-    }
+  public static void main(String[] args) {
+    SpringApplication.run(Application.class, args);
+  }
 
 }
