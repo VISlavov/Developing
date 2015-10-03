@@ -1,5 +1,7 @@
 Requirements:
 
+	- Internet connection
+
 	- JDK 1.8+
 
 	- Gradle 2.7+
