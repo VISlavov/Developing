@@ -26,10 +26,10 @@ a, a:active, a:focus, a:hover, a:visited, button:focus, button:active {
 	display: block;
 }
 
-input.ng-invalid {
+form input.ng-invalid {
   border: 1px solid red;
 }
-input.ng-valid {
+form input.ng-valid {
   border: 1px solid green;
 }
 

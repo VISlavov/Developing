@@ -1,6 +1,15 @@
 app .controller('MainController', function($scope, SettingsData, $modal, ScopeApplier, RequestUtil) {
 	$scope.users = [];
+	$scope.sortType = 'firstName';
+  $scope.sortReverse = false;
+	$scope.searchCriteria = '';
+
 	RequestUtil.getUsers($scope);
+
+	$scope.changeOrder = function (type) {
+		$scope.sortType = type;
+		$scope.sortReverse = !$scope.sortReverse;
+	};
 
 	$scope.hasUsers = function() {
 		return (typeof $scope.users != 'undefined') &&
