@@ -1,0 +1,11 @@
+<div id="messages-list" ng-controller="MessagesListController">
+	<div ng-show="messagesList.length">
+		<div
+			ng-cloak
+			class="ajaxmessage alert-box alert-{{ message.status }} alert"
+			ng-repeat="message in messagesList">
+			{{ message.text }}
+			<a  class="close messages-close clickable" ng-click="clearMessage(message);">&times;</a>
+		</div>
+	</div>
+</div>

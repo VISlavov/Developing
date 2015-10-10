@@ -1,0 +1,85 @@
+<form class="form-horizontal"  name="addUserForm" role="form" data-url="createUser/" method="post" ng-submit="submitForm()" user-manipulation-form novalidate>
+	<div class="modal-header">
+		<button type="button" class="close" ng-click="closeModal()">
+			<span aria-hidden="true">×</span>
+			<span class="sr-only">Close</span>
+		</button>
+		<h4 class="modal-title">Create user</h4>
+	</div>
+	<div class="modal-body">
+		<div id="modal-messages-widget-container"></div>
+		<fieldset>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="firstName">First name</label>
+				<div class="col-md-4">
+					<input type="text" class="form-control" name="firstName" required ng-minlength=2 ng-maxlength=15 ng-pattern="/^[a-zA-Z]*$/" ng-model="formData.firstName"/>
+
+					<div ng-show="addUserForm.firstName.$dirty && addUserForm.firstName.$invalid">
+						<small class="error" ng-show="addUserForm.firstName.$error.required">
+							Required.
+						</small>
+						<small class="error" ng-show="addUserForm.firstName.$error.minlength">
+							Your name is required to be at least 3 characters.
+						</small>
+						<small class="error" ng-show="addUserForm.firstName.$error.maxlength">
+							Your name cannot be longer than 15 characters.
+						</small>
+						<small class="error" ng-show="addUserForm.firstName.$error.pattern">
+							The name you entered is invalid.
+						</small>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="lastName">Last name</label>
+				<div class="col-md-4">
+					<input type="text" class="form-control" name="lastName" required ng-minlength=2 ng-maxlength=15 ng-pattern="/^[a-zA-Z]*$/" ng-model="formData.lastName"/>
+
+					<div ng-show="addUserForm.name.$dirty && addUserForm.name.$invalid">
+						<small class="error" ng-show="addUserForm.lastName.$error.required">
+							Required.
+						</small>
+						<small class="error" ng-show="addUserForm.lastName.$error.minlength">
+							Your name is required to be at least 3 characters.
+						</small>
+						<small class="error" ng-show="addUserForm.lastName.$error.maxlength">
+							Your name cannot be longer than 15 characters.
+						</small>
+						<small class="error" ng-show="addUserForm.lastName.$error.pattern">
+							The name you entered is invalid.
+						</small>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="email">Email</label>
+				<div class="col-md-4">
+					<input type="email" id="email" class="form-control" name="email" placeholder="example@example.com" required ng-model="formData.email"/>
+					<div ng-show="addUserForm.email.$dirty && addUserForm.email.$invalid">
+						<small class="error" ng-show="addUserForm.email.$error.required">
+							Required.
+						</small>
+						<small class="error" ng-show="addUserForm.email.$error.email">
+							Enter a valid email adress.
+						</small>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-4 control-label" for="birthDate">Birthdate</label>
+				<div class="col-md-4" ng-controller="DatePickerController">
+					<input class="form-control" name="birthDate" type="text" datepicker-popup="{{ dateFormat }}" is-open="isDatePickerOpen" ng-click="switchDatePickerState()" required ng-readonly="true" ng-model="formData.birthDate"/>
+					<div ng-show="addUserForm.birthDate.$dirty && addUserForm.birthDate.$invalid">
+						<small class="error" ng-show="addUserForm.birthDate.$error.required">
+							Required.
+						</small>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+	</div>
+	<div class="modal-footer">
+		<button id="close-modal" type="button" class="btn btn-default" ng-click="closeModal()">Cancel</button>
+		<input type="submit" class="btn btn-custom" value="Add" ng-disabled="addUserForm.$invalid"></input>
+	</div>
+</form>

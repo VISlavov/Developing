@@ -32,7 +32,7 @@ public class DbController {
 		return repository.findByEmail(email);
 	}
 
-	@RequestMapping(value="/createUser", method=RequestMethod.POST)
+	@RequestMapping(value="/createUser", produces={"text/plain"}, method=RequestMethod.POST)
 	public @ResponseBody String createUser(@RequestParam("firstName") String firstName,
 																				@RequestParam("lastName") String lastName,
 																				@RequestParam("email") String email,
@@ -53,7 +53,7 @@ public class DbController {
 		return responseMsg;
 	}
 
-	@RequestMapping(value="/deleteUser", method=RequestMethod.DELETE)
+	@RequestMapping(value="/deleteUser", produces={"text/plain"}, method=RequestMethod.DELETE)
 	public @ResponseBody String deleteUser(@RequestParam("email") String email,
 																					HttpServletResponse response){
 		String responseMsg;
@@ -70,7 +70,7 @@ public class DbController {
 		return responseMsg;
 	}
 
-	@RequestMapping(value="/updateUser", method=RequestMethod.PUT)
+	@RequestMapping(value="/updateUser", produces={"text/plain"}, method=RequestMethod.PUT)
 	public @ResponseBody String updateUser(@RequestParam("id") String id,
 																				@RequestParam("firstName") String firstName,
 																				@RequestParam("lastName") String lastName,

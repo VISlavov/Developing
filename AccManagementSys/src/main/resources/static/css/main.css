@@ -1,0 +1,11 @@
+.button-container {
+	margin-bottom: 50px;
+}
+
+.table.table-hover {
+	width: 100%
+}
+
+.table.table-hover tr {
+	width: 25%
+}
