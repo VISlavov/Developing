@@ -17,3 +17,9 @@
 .table.table-hover tr {
 	width: 25%
 }
+
+@media screen and (max-width: 600px) {
+	.unnecessary-user-data {
+			display: none !important;
+	}
+}

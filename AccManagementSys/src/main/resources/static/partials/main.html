@@ -1,10 +1,10 @@
 <div class="container-fluid controls-container">
 	<div class="row">
-		<button class="col-xs-2 col-lg-offset-3 btn btn-default" data-template="partials/add_user_modal.html" modal-trigger>
+		<button class="col-sm-2 col-xs-6 col-sm-offset-3 btn btn-default" data-template="partials/add_user_modal.html" modal-trigger>
 			Add user <span class="glyphicon glyphicon-plus-sign"> </span>
 		</button>	
 
-		<button class="col-xs-2 col-lg-offset-1 btn btn-default" ng-show="hasUsers()" data-template="partials/remove_user_modal.html" modal-trigger>
+		<button class="col-sm-2 col-xs-6 col-sm-offset-2 btn btn-default" ng-show="hasUsers()" data-template="partials/remove_user_modal.html" modal-trigger>
 			Remove user <span class="glyphicon glyphicon-minus-sign"> </span>
 		</button>	
 	</div>
@@ -35,16 +35,16 @@
 						<span ng-show="sortType == 'lastName'" class="glyphicon" ng-class="sortReverse ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
 					</a>
 				</th>
-				<th>
-					<a class="clickable" ng-click="changeOrder('email')">
-						Email
-						<span ng-show="sortType == 'email'" class="glyphicon" ng-class="sortReverse ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
-					</a>
-				</th>
-				<th>
+				<th class="unnecessary-user-data">
 					<a class="clickable" ng-click="changeOrder('birthDate')">
 						Birthdate
 						<span ng-show="sortType == 'birthDate'" class="glyphicon" ng-class="sortReverse ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
+					</a>
+				</th>
+				<th class="unnecessary-user-data">
+					<a class="clickable" ng-click="changeOrder('email')">
+						Email
+						<span ng-show="sortType == 'email'" class="glyphicon" ng-class="sortReverse ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></span>
 					</a>
 				</th>
 			</tr>
@@ -53,8 +53,8 @@
 			<tr ng-repeat="user in filteredUsers = (users | filter:searchCriteria) | orderBy:sortType:sortReverse">
 				<td> {{user.firstName}} </td>
 				<td> {{user.lastName}} </td>
-				<td> {{user.email}} </td>
-				<td> {{user.birthDate}} </td>
+				<td class="unnecessary-user-data"> {{user.birthDate}} </td>
+				<td class="unnecessary-user-data"> {{user.email}} </td>
 			</tr>
 		</tbody>
 	</table>
