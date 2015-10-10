@@ -105,7 +105,7 @@ public class DbController {
 	private boolean isEmailValid(User user, String email) {
 		boolean isValid = true;
 
-		if(user.getEmail() != email) {
+		if(!user.getEmail().equals(email)) {
 			if(repository.findByEmail(email) != null) {
 				isValid = false;
 			}

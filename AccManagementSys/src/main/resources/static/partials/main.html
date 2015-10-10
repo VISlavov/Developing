@@ -50,7 +50,9 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="user in filteredUsers = (users | filter:searchCriteria) | orderBy:sortType:sortReverse">
+			<tr title="Click to edit" class="clickable" data-template="partials/update_user_modal.html" data-fill="{{ user }}"
+				ng-repeat="user in filteredUsers = (users | filter:searchCriteria) | orderBy:sortType:sortReverse" modal-trigger>
+
 				<td> {{user.firstName}} </td>
 				<td> {{user.lastName}} </td>
 				<td class="unnecessary-user-data"> {{user.birthDate}} </td>

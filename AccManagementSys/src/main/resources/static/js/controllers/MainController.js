@@ -25,7 +25,7 @@ app .controller('MainController', function($scope, SettingsData, $modal, ScopeAp
 				$scope.removeUser(args.email);
 				break;
 			case SettingsData.userManipulationTypes.put:
-				$scope.updateUser(args.email);
+				$scope.updateUser(args.email, args.id);
 				break;
 			default:
 				break;
@@ -36,16 +36,24 @@ app .controller('MainController', function($scope, SettingsData, $modal, ScopeAp
 		return RequestUtil.getUser($scope, email);
 	};
 
-	$scope.removeUser = function(email) {
+	$scope.removeUser = function(email, id) {
 		var filteredUsers = $scope.users.filter(function (user) {
-				return user.email != email;
+				var isDifferent;
+
+				if(typeof id != 'undefined') {
+					isDifferent = (user.id != id);
+				} else {
+					isDifferent = (user.email != email);
+				}
+
+				return isDifferent;
 			});
 
 		return ScopeApplier.apply($scope, "users", filteredUsers);
 	};
 
-	$scope.updateUser = function(email) {
-		removeUser(email);
-		addNewUser(email);
+	$scope.updateUser = function(email, id) {
+		$scope.removeUser(email, id);
+		$scope.addNewUser(email);
 	};
 });

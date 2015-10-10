@@ -1,4 +1,9 @@
-app.controller("ModalController", function ($scope, $modalInstance, $timeout, DomUtil, MessagesUtil){
+app.controller("ModalController", function ($scope, $modalInstance, formData, $timeout, DomUtil, MessagesUtil, ScopeApplier){
+	if(typeof formData != 'undefined') {
+		formData = JSON.parse(formData);
+		$scope.formData = formData;
+	}
+
 	$timeout(function () {
 		var mainMessagesWidgetParent = document.querySelector('#main-messages-widget-container'),
 			modalMessagesWidgetParent = document.querySelector('#modal-messages-widget-container');
@@ -7,7 +12,10 @@ app.controller("ModalController", function ($scope, $modalInstance, $timeout, Do
 		MessagesUtil.clearMessagesList();
 
 		$scope.$on('$destroy', function () {
-			document.querySelector('body *[modal-trigger=""]:focus').blur();
+			var focusedButton = document.querySelector('body *[modal-trigger=""]:focus');
+			if(focusedButton) {
+				focusedButton.blur();
+			}
 
 			if(MessagesUtil.hasErrorMessages()) {
 				MessagesUtil.clearMessagesList();

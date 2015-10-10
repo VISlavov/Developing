@@ -1,4 +1,4 @@
-app.directive('userManipulationForm', function ($rootScope, SettingsData, MessagesUtil, RequestUtil) {
+app.directive('userManipulationForm', function ($rootScope, SettingsData, MessagesUtil, RequestUtil, ScopeApplier) {
 	return {
 		link: function (scope, el, attr) {
 			scope.submitForm = function() {
@@ -7,12 +7,18 @@ app.directive('userManipulationForm', function ($rootScope, SettingsData, Messag
 				RequestUtil.commonFormRequest(settings)
 					.then(function() {
 						if(!MessagesUtil.hasErrorMessages()) {
-							var emailField = document.querySelector('#email'),
-								email = angular.element(emailField).val(),
-								manipulationType = attr.method;
+							var manipulationType = attr.method,
+								email,
+								id;
+
+							if(typeof scope.formData != 'undefined') {
+								email = scope.formData.email;
+								id = scope.formData.id;
+							}
 
 							$rootScope.$broadcast("usersUpdated", {
 								email: email,
+								id: id,
 								manipulationType: SettingsData.userManipulationTypes[manipulationType]
 							});
 
@@ -28,12 +34,24 @@ app.directive('modalTrigger', function ($modal) {
 	return {
 		link: function (scope, el, attr) {
 			var template = attr.template,
-				controller = attr.controller || 'ModalController';
+				controller = attr.controller || 'ModalController',
+				fillData = attr.fill || false;
 
 			el.bind('click', function() {
 				$modal.open({
 					templateUrl: template,
-					controller: 'ModalController as ctrl'
+					controller: 'ModalController as ctrl',
+					resolve: {
+						formData: function () {
+							var formData;
+
+							if(fillData) {
+								formData = fillData;
+							}
+							
+							return formData;
+						}
+					}
 				});
       });
 		}
