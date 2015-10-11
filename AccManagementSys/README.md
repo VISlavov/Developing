@@ -14,6 +14,8 @@ Example:
 
 	gradle build
 
+	gradle jasmineRun # optional - runs jasmine tests
+
 	java -jar build/libs/gs-spring-boot-1.2.6.jar
 
 	firefox http://localhost:8080
