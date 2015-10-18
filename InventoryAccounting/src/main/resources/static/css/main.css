@@ -1,0 +1,19 @@
+.controls-container {
+	margin-bottom: 50px;
+}
+
+.controls-container > * {
+	margin-bottom: 30px;
+}
+
+.controls-container > *:last-child {
+	margin-bottom: 0px;
+}
+
+.table.table-hover {
+	width: 100%
+}
+
+.table.table-hover tr {
+	width: 25%
+}

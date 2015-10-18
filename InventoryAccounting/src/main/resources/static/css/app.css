@@ -1,0 +1,42 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+	display: none !important;
+} 
+
+button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="file"] > input[type="button"]::-moz-focus-inner {
+  padding: 0px 2px 0px 2px; border: 1px dotted transparent;
+}
+
+a, a:active, a:focus, a:hover, a:visited, button:focus, button:active {
+  text-decoration: none;
+  outline:  none !important;
+  ie-dummy: expression(this.hideFocus=true);
+  background: none;
+}
+
+.modal {
+	display: block;
+}
+
+form input.ng-invalid {
+  border: 1px solid red;
+}
+form input.ng-valid {
+  border: 1px solid green;
+}
+
+.error {
+	color: red;
+}
+
+.clickable {
+	cursor: pointer;
+}
