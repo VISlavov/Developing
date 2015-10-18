@@ -12,7 +12,7 @@ Requirements:
 	
 Example:
 
-	systemctl start mysql # start your MySQL database server
+	sudo systemctl start mysqld # start your MySQL database server
 
 	mysql -u root -p < database_setup.sql # setup the database structure demanded for the app
 
@@ -20,12 +20,14 @@ Example:
 
 	gradle jasmineRun # optional - runs jasmine tests
 
-	To run directly:
-		java -jar build/libs/InventoryAccounting.jar
-
 	To deploy to Tomcat:
-		sudo cp /build/libs/InventoryAccounting.war /var/libs/webapps # copy war file to your webapps dir
+		sudo cp build/libs/InventoryAccounting.war /var/lib/tomcat8/webapps # copy war file to your webapps dir
 
-		systemctl start tomcat8 # start your tomcat web server
+		sudo systemctl start tomcat8 # start your tomcat web server
 
-	firefox http://localhost:8080/InventoryAccounting/
+	firefox http://localhost:8080/InventoryAccounting/ &
+
+Notes:
+
+	If you already have a database or user named like the ones in /src/main/resources/application.properties
+	you should consider that they will be deleted when you setup the database from this application.
