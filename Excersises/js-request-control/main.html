@@ -13,22 +13,25 @@
 			<h4> JS request control example </h4>
 		</header>
 
-			<div id="navigation">
-				<div class="row">
-					<div class="col-lg-6">
-						<div class="input-group">
-							<span class="input-group-btn">
-								<button class="btn btn-default" type="button">Fetch Data</button>
-							</span>
-							<input type="text" class="form-control" placeholder="Results Count">
-						</div><!-- /input-group -->
-					</div><!-- /.col-lg-6 -->
-				</div>
+		<div id="navigation">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="input-group">
+						<span class="input-group-btn">
+							<button id="data-request-button" class="btn btn-default" type="button">Fetch Data</button>
+						</span>
+						<input id="count-field" class="form-control" type="text" placeholder="Results Count">
+					</div><!-- /input-group -->
+				</div><!-- /.col-lg-6 -->
 			</div>
+		</div>
+
 		<div id="content">
+			<div class="well"> No data has been loaded yet </div>	
 		</div>
 
 		<script src="vendor/jquery-1.12.4.min.js"></script>
+		<script src="js/DataController.js"></script>
 		<script src="js/main.js"></script>
 	</body>
 </html>
