@@ -1,0 +1,15 @@
+#navigation {
+	margin-bottom: 30px;
+}
+
+#content img.thumbnail {
+	width: 100px;
+	height: 100px;
+	display: inline-block;
+	float: left;
+}
+
+#loading-notification {
+	display: block;
+	margin: 0 auto;
+}

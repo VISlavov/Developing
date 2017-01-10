@@ -3,6 +3,7 @@
 	<head>
 		<title> JS request control example </title>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
 		<link href="vendor/bootstrap/bootstrap-3.3.7.css" rel="stylesheet">
 		<link href="css/main.css" rel="stylesheet">
@@ -30,8 +31,13 @@
 			<div class="well"> No data has been loaded yet </div>	
 		</div>
 
+		<img id="loading-notification" src="res/loading.gif"> </img>
+
 		<script src="vendor/jquery-1.12.4.min.js"></script>
-		<script src="js/DataController.js"></script>
+		<script src="js/DataDisplayController.js"></script>
+		<script src="js/DataRequestController.js"></script>
+		<script src="js/AlertUtil.js"></script>
+		<script src="js/MainService.js"></script>
 		<script src="js/main.js"></script>
 	</body>
 </html>

@@ -1,6 +1,8 @@
-var DataController = function () {
-	var DATA_API_URL = 'https://unsplash.it/200?RANDOM';
+var DataRequestController = function (displayController) {
+	var DATA_API_URL = 'http://www.splashbase.co/api/v1/images/random';
 	var MAX_SIMULTANEOUS_REQUEST_COUNT = 3;
+
+	var _this = this;
 		
 	this.getSingleDataElement = function() {
 		return $.ajax({
@@ -24,7 +26,7 @@ var DataController = function () {
 				allData.push(data);
 
 				if(count > allData.length) {
-					this.handleDataRequest(allData, count, deferred);
+					_this.handleDataRequest(allData, count, deferred);
 				} else {
 					deferred.resolve(allData);
 				}
@@ -35,6 +37,7 @@ var DataController = function () {
 		var data = [],
 			deferred = $.Deferred();
 
+		displayController.showLoadingNotification();
 		this.requestDataForFullCapacity(data, count, deferred);
 
 		return deferred.promise();
