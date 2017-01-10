@@ -1,4 +1,4 @@
-var MainService = function() {
+var MainService = function(displayController) {
 	this.MIN_COUNT_BOUNDARY = 1;
 	this.MAX_COUNT_BOUNDARY = 1000;
 
@@ -7,6 +7,20 @@ var MainService = function() {
 		desiredDataCount = parseInt(desiredDataCount);
 
 		return desiredDataCount;
+	};
+
+	this.checkRequestConcurrency = function() {
+		var isConcurrencyFound = false;
+		
+		if(displayController.isLoadingNotificationShown()) {
+			var alertUtil = new AlertUtil(this);
+			
+			alertUtil.alertConcurrentRequest();
+
+			isConcurrencyFound = true;
+		}
+
+		return isConcurrencyFound;
 	};
 
 	this.isDataCountValid = function(count) {

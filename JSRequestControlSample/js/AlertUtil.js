@@ -14,6 +14,10 @@ var AlertUtil = function (mainService) {
 			+ ")");
 	};
 
+	this.alertConcurrentRequest = function() {
+		this.showAlert("Please wait while your previous request is being processed.");
+	};
+
 	this.showAlert = function(message) {
 		alert(message);
 	};

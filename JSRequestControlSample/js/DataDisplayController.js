@@ -10,6 +10,10 @@ var DataDisplayController = function () {
 	this.showLoadingNotification = function() {
 		$('#loading-notification').show();
 	};
+	
+	this.isLoadingNotificationShown = function() {
+		return $('#loading-notification').is(":visible");
+	};
 
 	this.hideLoadingNotification = function() {
 		$('#loading-notification').hide();

@@ -1,10 +1,15 @@
 var displayController = new DataDisplayController(),
 	requestController = new DataRequestController(displayController),
-	service = new MainService();
+	service = new MainService(displayController);
 
 displayController.prepareDisplay();
 
 $('#data-request-button').click(function() {
+	//Evasion for concurrent requests
+	if(service.checkRequestConcurrency()) {
+		return;
+	}
+
 	var desiredDataCount = service.getDesiredDataCount();
 
 	if(service.isDataCountValid(desiredDataCount)) {
@@ -15,5 +20,6 @@ $('#data-request-button').click(function() {
 				displayController.displayLoadedData(data);
 			});
 	}
+
 });
 
